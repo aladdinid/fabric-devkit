@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+
+  cli.fabric.network:
+    container_name: cli.fabric.network
+    image: hyperledger/fabric-tools
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_CFG_PATH=/opt/gopath/src/github.com/hyperledger/fabric
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    volumes:
+      - .:/opt/gopath/src/github.com/hyperledger/fabric
