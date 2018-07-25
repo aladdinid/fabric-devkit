@@ -17,9 +17,9 @@ services:
       - ORDERER_GENERAL_BATCHSIZE=10
       - ORDERER_GENERAL_BATCHTIMEOUT=10s
       - ORDERER_GENERAL_LOGLEVEL=debug
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/fabric/channel-artefacts/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/fabric/crypto-config/channel-artefacts/genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
-      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/fabric/crypto-config/orderers/msp
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/fabric/crypto-config/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/fabric/crypto-config/tls/server.crt
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/fabric/crypto-config/tls/server.key
@@ -27,15 +27,14 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-      - ./assets/channel-artefacts/:/var/hyperledger/fabric/channel-artefacts/
-      - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/msp:/var/hyperledger/fabric/crypto-config/orderers/msp
-      - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/tls:/var/hyperledger/fabric/crypto-config/tls
+      - ./assets/channel-artefacts/:/var/hyperledger/fabric/crypto-config/channel-artefacts/
+      - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/var/hyperledger/fabric/crypto-config/
       - ./assets/crypto-config/peerOrganizations/org1.fabric.network/peers/peer0.org1.fabric.network/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/org1.fabric.network/tls/ca.crt
       - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/org2.fabric.network/tls/ca.crt
     ports:
       - 7050:7050
 
-# Organisation 1
+#Org1
   ca.org1.fabric.network:
     container_name: ca.org1.fabric.network
     image: hyperledger/fabric-ca
@@ -101,36 +100,36 @@ services:
       - peer0.db.org1.fabric.network
 
   cli.peer0.org1.fabric.network:
-    container_name: cli.peer0.org1.fabric.network
-    image: hyperledger/fabric-tools
-    tty: true
-    environment:
-      - GOPATH=/opt/gopath
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=debug
-      - CORE_PEER_ID=peer0.org1.fabric.network
-      - CORE_PEER_ADDRESS=peer0.org1.fabric.network:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/users/Admin@org1.fabric.network/msp
-      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/orderer/msp/tlscacerts/tlsca.fabric.network-cert.pem
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
-    command: /bin/bash
-    volumes:
-      - /var/run/:/host/var/run/
-      - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
-      - ./assets/crypto-config/peerOrganizations/org1.fabric.network/peers/peer0.org1.fabric.network/:/etc/hyperledger/fabric/crypto-config/
-      - ./assets/crypto-config/peerOrganizations/org1.fabric.network/users/:/etc/hyperledger/fabric/crypto-config/users/
-      - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artifacts/
-      - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
-      - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
-    depends_on:
-      - peer0.org1.fabric.network
+      container_name: cli.peer0.org1.fabric.network
+      image: hyperledger/fabric-tools
+      tty: true
+      environment:
+        - GOPATH=/opt/gopath
+        - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+        - CORE_LOGGING_LEVEL=debug
+        - CORE_PEER_ID=peer0.org1.fabric.network
+        - CORE_PEER_ADDRESS=peer0.org1.fabric.network:7051
+        - CORE_PEER_LOCALMSPID=Org1MSP
+        - CORE_PEER_TLS_ENABLED=true
+        - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
+        - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
+        - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
+        - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/users/Admin@org1.fabric.network/msp
+        - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/orderer/msp/tlscacerts/tlsca.fabric.network-cert.pem
+      working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+      command: /bin/bash
+      volumes:
+        - /var/run/:/host/var/run/
+        - ./assets/crypto-config/peerOrganizations/org1.fabric.network/peers/peer0.org1.fabric.network/:/etc/hyperledger/fabric/crypto-config/
+        - ./assets/crypto-config/peerOrganizations/org1.fabric.network/users/:/etc/hyperledger/fabric/crypto-config/users/
+        - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
+        - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artefacts/        
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
+        - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
+      depends_on:
+        - peer0.org1.fabric.network
 
-# Organisation 2
+#org2
   ca.org2.fabric.network:
     container_name: ca.org2.fabric.network
     image: hyperledger/fabric-ca
@@ -159,35 +158,36 @@ services:
     image: hyperledger/fabric-peer
     tty: true
     environment:
-      - CORE_PEER_ID=peer0.org2.fabric.network
-      - CORE_PEER_ADDRESS=peer0.org2.fabric.network:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/msp
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
-      - CORE_PEER_ENDORSER_ENABLED=true
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.fabric.network:7051
-      - CORE_PEER_GOSSIP_USELEADERELECTION=true
-      - CORE_PEER_GOSSIP_ORGLEADER=false
-      # This disables mutual auth for gossip
-      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
-      - CORE_PEER_PROFILE_ENABLED=true
-      - CORE_LOGGING_LEVEL=debug
-      - CORE_NEXT=true
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=two-orgs_default
-      - GOPATH=/opt/gopath
-      # World state
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.db.org2.fabric.network:5984
+        - CORE_PEER_ID=peer0.org2.fabric.network
+        - CORE_PEER_ADDRESS=peer0.org2.fabric.network:7051
+        - CORE_PEER_LOCALMSPID=Org2MSP
+        - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/msp
+        - CORE_PEER_TLS_ENABLED=true
+        - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
+        - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
+        - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
+        - CORE_PEER_ENDORSER_ENABLED=true
+        - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.fabric.network:7051
+        - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.fabric.network:7051
+        - CORE_PEER_GOSSIP_USELEADERELECTION=true
+        - CORE_PEER_GOSSIP_ORGLEADER=false
+        # This disables mutual auth for gossip
+        - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+        - CORE_PEER_PROFILE_ENABLED=true
+        - CORE_LOGGING_LEVEL=debug
+        - CORE_NEXT=true
+        - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+        - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=two-orgs_default
+        - GOPATH=/opt/gopath
+        # World state
+        - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+        - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.db.org2.fabric.network:5984
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
-    command: peer node start 
+    command: peer node start
              /bin/bash
     volumes:
-      - /var/run/:/host/var/run/
-      - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/:/etc/hyperledger/fabric/crypto-config/
+        - /var/run/:/host/var/run/
+        - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/:/etc/hyperledger/fabric/crypto-config/
     ports:
       - 7061:7051
       - 7063:7053
@@ -196,34 +196,34 @@ services:
       - peer0.db.org2.fabric.network 
 
   cli.peer0.org2.fabric.network:
-    container_name: cli.peer0.org2.fabric.network
-    image: hyperledger/fabric-tools
-    tty: true
-    environment:
-      - GOPATH=/opt/gopath
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=debug
-      - CORE_PEER_ID=peer0.org2.fabric.network
-      - CORE_PEER_ADDRESS=peer0.org2.fabric.network:7051
-      - CORE_PEER_LOCALMSPID=Org2MSP
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/users/Admin@org2.fabric.network/msp
-      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/orderer/msp/tlscacerts/tlsca.fabric.network-cert.pem
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
-    command: /bin/bash
-    volumes:
-      - /var/run/:/host/var/run/
-      - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
-      - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/:/etc/hyperledger/fabric/crypto-config/
-      - ./assets/crypto-config/peerOrganizations/org2.fabric.network/users/:/etc/hyperledger/fabric/crypto-config/users/
-      - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artifacts/
-      - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
-      - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
-    depends_on:
-      - peer0.org2.fabric.network
+      container_name: cli.peer0.org2.fabric.network
+      image: hyperledger/fabric-tools
+      tty: true
+      environment:
+        - GOPATH=/opt/gopath
+        - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+        - CORE_LOGGING_LEVEL=debug
+        - CORE_PEER_ID=peer0.org2.fabric.network
+        - CORE_PEER_ADDRESS=peer0.org2.fabric.network:7051
+        - CORE_PEER_LOCALMSPID=Org2MSP
+        - CORE_PEER_TLS_ENABLED=true
+        - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
+        - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
+        - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/ca.crt
+        - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/users/Admin@org2.fabric.network/msp
+        - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/orderer/msp/tlscacerts/tlsca.fabric.network-cert.pem
+      working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+      command: /bin/bash
+      volumes:
+        - /var/run/:/host/var/run/
+        - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/:/etc/hyperledger/fabric/crypto-config/
+        - ./assets/crypto-config/peerOrganizations/org2.fabric.network/users/:/etc/hyperledger/fabric/crypto-config/users/
+        - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
+        - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artefacts/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
+        - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
+      depends_on:
+        - peer0.org2.fabric.network
 
 # Asset Generator
   assets.generator.fabric.network:

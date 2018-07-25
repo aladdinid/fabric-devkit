@@ -14,7 +14,7 @@ Organizations:
     - &OrdererOrg
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: OrdererMSP
+        Name: Orderer
 
         # ID to load the MSP definition as
         ID: OrdererMSP
@@ -25,7 +25,7 @@ Organizations:
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org1MSP
+        Name: Org1
 
         # ID to load the MSP definition as
         ID: Org1MSP
@@ -42,7 +42,7 @@ Organizations:
     - &Org2
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org2MSP
+        Name: Org2
 
         # ID to load the MSP definition as
         ID: Org2MSP
@@ -99,11 +99,11 @@ Capabilities:
     # manipulated without concern for upgrading orderers.  Set the value of the
     # capability to true to require it.
     Application: &ApplicationCapabilities
-        # V1.2 for Application is a catchall flag for behavior which has been
+        # V1.1 for Application is a catchall flag for behavior which has been
         # determined to be desired for all peers running v1.0.x, but the
         # modification of which would cause incompatibilities.  Users should
         # leave this flag set to true.
-        V1_2: true
+        V1_1: true
 
 ################################################################################
 #
