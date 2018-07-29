@@ -78,7 +78,7 @@ function cleanNetwork(){
     fabric_container=$(docker ps --format "{{.ID}}" --filter "name=fabric.network") 
     docker rm -f $fabric_container
     asset_generator=$(docker ps --format "{{.ID}}" --filter "name=asset_generator")
-    echo $asset_generator
+    docker rm -f $asset_generator
     docker rmi -f $(docker images | grep hyperledger | tr -s ' ' | cut -d ' ' -f 3)
 }
 

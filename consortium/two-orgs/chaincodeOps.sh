@@ -13,8 +13,8 @@ fi
 
 # If you plan to use node chaincode, replace the -l argument with `node` and change -p argument to an appropriate package name.
 function installChaincode(){
-    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/install-chaincode.sh -c mycc -v 1.0 -l golang -p aladdin'
-    docker exec cli.peer0.org2.fabric.network /bin/bash -c '${PWD}/scripts/install-chaincode.sh -c mycc -v 1.0 -l golang -p aladdin'
+    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/install-chaincode.sh -c mycc -v 1.0 -l golang -p minimalcc'
+    docker exec cli.peer0.org2.fabric.network /bin/bash -c '${PWD}/scripts/install-chaincode.sh -c mycc -v 1.0 -l golang -p minimalcc'
 }
 
 # If you plan to use Go chaincode, replace the -l argument with `golang`

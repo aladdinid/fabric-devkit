@@ -125,7 +125,7 @@ services:
         - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
         - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artefacts/        
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
-        - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
+        - ../../chaincodes/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
       depends_on:
         - peer0.org1.fabric.network
 
@@ -221,7 +221,7 @@ services:
         - ./assets/crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/etc/hyperledger/fabric/crypto-config/orderer/
         - ./assets/channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artefacts/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
-        - $GOPATH/src/bitbucket.org/elementalconcept/aladdin-genesis-chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
+        - ../../chaincodes/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
       depends_on:
         - peer0.org2.fabric.network
 
