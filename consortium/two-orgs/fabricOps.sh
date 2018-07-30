@@ -2,7 +2,7 @@
 
 . ./scripts/common.sh
 
-usage_message="Useage: $0 start | status| clean"
+usage_message="Useage: $0 start | status| clean | cleanall"
 
 ARGS_NUMBER="$#"
 COMMAND="$1"
@@ -27,7 +27,7 @@ function pullDockerImages(){
 }
 
 function setupAssetGenerator(){
-    docker-compose -f ./network-config.yaml up -d assets.generator.fabric.network 
+    docker-compose -f ./network-config.yaml up -d assets.generator.fabric.network
 }
 
 function cleanAssets(){
@@ -41,11 +41,13 @@ function cleanAssets(){
 }
 
 function generateCryptoArtifacts(){
-   docker exec assets.generator.fabric.network /bin/bash -c '${PWD}/generate-crypto.sh'
+    docker-compose -f ./network-config.yaml run --rm assets.generator.fabric.network /bin/bash -c '${PWD}/generate-crypto.sh'
+   #docker exec assets.generator.fabric.network /bin/bash -c '${PWD}/generate-crypto.sh'
 }
 
 function generateChannelArtifacts(){
-    docker exec assets.generator.fabric.network /bin/bash -c '${PWD}/generate-chanconfig.sh'
+    docker-compose -f ./network-config.yaml run --rm assets.generator.fabric.network /bin/bash -c '${PWD}/generate-chanconfig.sh'
+    #docker exec assets.generator.fabric.network /bin/bash -c '${PWD}/generate-chanconfig.sh'
 }
 
 function createSecretPrivKeys(){
@@ -67,7 +69,7 @@ function startNetwork(){
     docker-compose -f ./network-config.yaml up -d peer0.db.org1.fabric.network
     docker-compose -f ./network-config.yaml up -d peer0.org1.fabric.network
     docker-compose -f ./network-config.yaml up -d cli.peer0.org1.fabric.network
-     
+
     docker-compose -f ./network-config.yaml up -d ca.org2.fabric.network
     docker-compose -f ./network-config.yaml up -d peer0.db.org2.fabric.network
     docker-compose -f ./network-config.yaml up -d peer0.org2.fabric.network
@@ -82,6 +84,11 @@ function cleanNetwork(){
     docker rmi -f $(docker images | grep hyperledger | tr -s ' ' | cut -d ' ' -f 3)
 }
 
+function cleanall(){
+    docker rm -f $(docker ps -aq)
+    docker rmi -f $(docker images -q)
+}
+
 function networkStatus(){
     docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}" --filter "name=fabric.network"
 }
@@ -90,7 +97,7 @@ verifyArg
 case $COMMAND in
     "start")
         pullDockerImages
-        setupAssetGenerator
+        #setupAssetGenerator
         cleanAssets
         sleep 1s
         generateCryptoArtifacts
@@ -105,7 +112,10 @@ case $COMMAND in
     "clean")
         cleanNetwork
         cleanAssets
-        ;;  				
+        ;;
+    "cleanall")
+        cleanall
+        ;;				
     *)
         echo $usage_message
         exit 1
