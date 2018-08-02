@@ -236,3 +236,18 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     volumes:
       - .:/opt/gopath/src/github.com/hyperledger/fabric
+
+# Restful API
+  api.org1.fabric.network:
+    container_name: api.org1.fabric.network
+    build:
+      context: ./api
+    image: aladdinid/fabric-rest-api
+    environment:
+      - GOPATH=/opt
+      - ORG=org1
+    working_dir: /opt
+    volumes:
+      - ./assets:/opt/orgs/assets
+    ports:
+      - 8081:8080

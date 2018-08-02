@@ -19,6 +19,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // Invoke a method specified in the SimpleChaincode class
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("Hello Invoke")
+	fcn, args := stub.GetFunctionAndParameters()
+	logger.Infof("Function: %v Arguments: %v", fcn, args)
 	return shim.Success([]byte("Invoke"))
 }
 
