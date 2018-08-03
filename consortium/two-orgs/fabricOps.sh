@@ -133,6 +133,7 @@ case $COMMAND in
         ;;
     "cleanall")
         cleanall
+        cleanAssets
         ;;				
     *)
         echo $usage_message
