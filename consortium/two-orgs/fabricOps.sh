@@ -55,12 +55,12 @@ function renameSecretPrivKeys(){
     mv $PK secret.key
     popd
 
-    pushd /Users/paulsitoh/workspace/gopath/src/bitbucket.org/elementalconcept/maejor/consortium/two-orgs/assets/crypto-config/peerOrganizations/org1.fabric.network/users/Admin@org1.fabric.network/msp/keystore
+    pushd ./assets/crypto-config/peerOrganizations/org1.fabric.network/users/Admin@org1.fabric.network/msp/keystore
     PK=$(ls *_sk)
     mv $PK secret.key
     popd
 
-    pushd /Users/paulsitoh/workspace/gopath/src/bitbucket.org/elementalconcept/maejor/consortium/two-orgs/assets/crypto-config/peerOrganizations/org2.fabric.network/users/Admin@org2.fabric.network/msp/keystore
+    pushd ./assets/crypto-config/peerOrganizations/org2.fabric.network/users/Admin@org2.fabric.network/msp/keystore
     PK=$(ls *_sk)
     mv $PK secret.key
     popd
