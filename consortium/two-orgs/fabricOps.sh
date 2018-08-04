@@ -88,6 +88,7 @@ function configureNetwork(){
 
 function startRESTApi(){
     docker-compose -f ./network-config.yaml up -d api.org1.fabric.network
+    docker-compose -f ./network-config.yaml up -d api.org2.fabric.network
 }
 
 function cleanNetwork(){

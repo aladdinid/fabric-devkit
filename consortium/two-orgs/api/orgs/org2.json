@@ -1,6 +1,7 @@
 {
     "host":"localhost",
     "port":"8080",
+    "configFile": "org2-config.yaml",
     "blockchain": {
         "org": "org2",
         "peer": "peer0.org2.fabric.network",

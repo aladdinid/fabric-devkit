@@ -1,21 +1,21 @@
 'use strict'
 
 const path = require('path');
-const configFile = path.join(__dirname,'..','orgs','org1-config.yaml');
-
 const util = require('util');
 
 const FabricClient = require('fabric-client');
-const serviceConfig = (process.env.ORG == 'Org1')? require('../orgs/org1.json') : require('../orgs/org2.json');;
+const serviceConfig = (process.env.ORG === 'Org1')? require('../orgs/org1.json') : require('../orgs/org2.json');;
+
+const configFile = path.join(__dirname,'..','orgs',serviceConfig.configFile);
 
 const log4js = require('log4js');
 const logger = log4js.getLogger('maejor-blockchain');
-logger.level = 'ALL';
+logger.level = serviceConfig.loggingLevel;
+
 
 module.exports.getClient = async ()=>{
 
     FabricClient.setLogger(logger);
-
     const client = FabricClient.loadFromConfig(configFile);
     await client.initCredentialStores();
     let adminUserObj = await client.getUserContext('admin', true);

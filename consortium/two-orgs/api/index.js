@@ -9,8 +9,8 @@ const blockchain = require('./blockchain');
 
 const log4js = require('log4js');
 const logger = log4js.getLogger('maejor-api');
-logger.level = 'debug';
-const serviceConfig = (process.env.ORG == 'Org1')? require('./orgs/org1.json') : require('./orgs/org2.json');
+const serviceConfig = (process.env.ORG === 'Org1')? require('./orgs/org1.json') : require('./orgs/org2.json');
+logger.level = serviceConfig.loggingLevel;
 
 const host = 8080;
 const port = 8080;
