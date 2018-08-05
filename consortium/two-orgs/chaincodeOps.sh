@@ -28,7 +28,7 @@ function updateChaincode(){
 }
 
 function invokeChaincode(){
-    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/invoke.sh -c mycc -a [\"init\",\"Alice\",\"10\",\"Bob\",\"10\"]'
+    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/invoke.sh -c mycc -a [\"pay\",\"Paul\",\"1\",\"John\"]'
 }
 
 function queryChaincode(){
