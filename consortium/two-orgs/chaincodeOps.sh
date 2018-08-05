@@ -19,7 +19,7 @@ function installChaincode(){
 
 # If you plan to use Go chaincode, replace the -l argument with `golang`
 function instantiateChaincode(){
-    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/instantiate-chaincode.sh -c mycc -v 1.0 -l golang -a [\"Init\",\"Paul\",\"10\",\"John\",\"20\"]'
+    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/instantiate-chaincode.sh -c mycc -v 1.0 -l golang -a [\"init\",\"Paul\",\"10\",\"John\",\"20\"]'
 }
 
 # If you plan to use Go chaincode, replace the -l argument with `golang`
@@ -28,7 +28,7 @@ function updateChaincode(){
 }
 
 function invokeChaincode(){
-    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/invoke.sh -c mycc -a [\"move\",\"Paul\",\"John\",\"1\"]'
+    docker exec cli.peer0.org1.fabric.network /bin/bash -c '${PWD}/scripts/invoke.sh -c mycc -a [\"init\",\"Alice\",\"10\",\"Bob\",\"10\"]'
 }
 
 function queryChaincode(){
