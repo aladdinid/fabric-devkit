@@ -39,7 +39,7 @@ if [ -z $CHAINCODE_CONSTRUCTOR ]; then
 fi
 
 if [ ! -z $CHAINCODEID ]; then
-  echo "INVOKING chaincode $CHAINCODEID in $CHANNELNAME on the $ORDERER"
+  echo "Querying chaincode $CHAINCODEID in $CHANNELNAME on the $ORDERER"
   constructor="{\"Args\":$CHAINCODE_CONSTRUCTOR}"
   echo "with constructor $constructor"
 
