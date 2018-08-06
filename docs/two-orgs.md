@@ -1,14 +1,14 @@
 # Introduction
 
-The artefacts here are hardcoded to instantiate a two-organisations fabric network with in-built RESTful APIs and deploy chaincode packaged in `manimalcc`.
+The artefacts here are hardcoded to instantiate a two-organisations fabric network with in-built RESTful APIs and deploy chaincode packaged in `minimalcc`.
 
 # Content
 
 | Item | Description |
 | --- | --- |
-| api/ | This folder contains nodeJS Express code for generating a RESTFul API to enable developer invoke chaincode via a RESTful client such as Postman. |
+| api/ | This folder contains nodeJS Express code for generating a RESTFul API to enable developers to invoke chaincode via a RESTful client such as Postman. |
 | assets/ | Cryptographic and Fabric channel configuration assets. These are generated from executing the `fabricOps.sh`. |
-| scipts/ | A series of low-level Bash shell scripts for configuring the Fabric network, installing and instantiating chaincodes. Note: These scripts are intended to be executed from within `cli` containers based on `fabric-tools` images provided by Hyperledger. |
+| scipts/ | A series of low-level Bash shell scripts for configuring the Fabric network, installing and instantiating chaincodes. Note: These scripts are intended to be executed from within the `cli` containers based on `fabric-tools` images provided by Hyperledger. |
 | chaincodeOps.sh | A Bash shell script to aggregate the low-level scripts to support installation, instantiation and invocation of chaincode. Note: this script is hard-coded to work with chaincode named `mycc` and `verion 1.0` only. |
 | channelOps.sh | A Bash shell script to aggregate the low-level scripts to create a channel name `mychannel`. |
 | `configtx.yaml` | A script used to generate artefacts for configuration a Fabric channel. |
