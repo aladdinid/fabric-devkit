@@ -1,14 +1,14 @@
 # Introduction
 
-The artefacts, or Fabric development kit, found in this Git repo is intended to help developers, using macOS or Linux-base platform:
+The artefacts, or Fabric development kit, found in this Git repo is intended to help developers, using macOS or Linux-based platforms:
 
 * learn what is involved in orchestrating and instantiating a Fabric network;
 * debug chaincode;
-* to customise a locally instantiable Fabric network to minic a production version.
+* Customise a locally instantiable Fabric network to minic a production version.
 
-The current version of this Fabric development kit does not yet support the ability to support Windows platform or to customise a Farbic network. This may be incorporated in future version.
+The current version of this Fabric development kit does not yet support the Windows platform or to customise a Farbic network. This may be incorporated in future version.
 
-# Pre-requisite
+# Pre-requisites
 
 1. Install [Go tools](http://golang.org/dl).
 
@@ -20,7 +20,7 @@ The current version of this Fabric development kit does not yet support the abil
 
     `export GOPATH=$HOME/go-projects`
 
-3. Create a folder in `$GOPATH/src` and navigate to it. Under the folder clone this repo.
+3. Create a folder in `$GOPATH/src` and navigate to it. Under the folder clone this repository.
 
 
 # Content
@@ -34,13 +34,13 @@ The current version of this Fabric development kit does not yet support the abil
 
 # Two-organisation consortium
 
-This configuration of Fabric network provides developer with the opportunity to quickly debug a chaincode. A default two organisations network is provided where developer could subject their chaincode to interaction between two organisations.
+This configuration of Fabric network provides developers with the opportunity to quickly debug a chaincode. A default two organisations network is provided where developers could subject their chaincode to interaction between two organisations.
 
-Please refer to [this for detail description](./docs/two-orgs.md)
+Please refer to [this for a detail description](./docs/two-orgs.md)
 
 # Acknowledgement
 
-Aladdin Blockchain Technologies Ltd for sponsoring the effort to create this Fabric Development Kit and 
+Aladdin Blockchain Technologies Ltd for sponsoring the effort to create this Fabric Development Kit 
 
 # Disclaimer
 
