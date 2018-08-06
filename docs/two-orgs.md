@@ -2,6 +2,14 @@
 
 The artefacts here are hardcoded to instantiate a two-organisations fabric network with in-built RESTful APIs and deploy chaincode packaged in `minimalcc`.
 
+---
+**Disclaimer**
+
+This version of the Fabric network is intended primarily to illustrate and educate users. It could also be used to support basic debugging of chaincode.
+
+It is **not** to be replicated in a mission critical or production environment. If you wish to do so, you do so at your own risk.
+---
+
 # Content
 
 | Item | Description |
