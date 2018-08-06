@@ -30,11 +30,11 @@ The current version of this Fabric development kit does not yet support the Wind
 | chaincodes/ | This folder contains chaincodes |
 | chaincodes/minimalcc | This folder is the container for a default version of a chaincode for illustration purposes only |
 | consortium | This folder contains definitions of and scripts to orchestrate Fabric network |
-| consortium/two-orgs | This is a default two organisations fabric network intended for illustration purposes only |
+| consortium/twoorgs | This is a default two organisations fabric network intended for illustration purposes only |
 
-# Two-organisation consortium
+# Two-organisations consortium
 
-This configuration of Fabric network provides developers with the opportunity to quickly debug a chaincode. A default two organisations network is provided where developers could subject their chaincode to interaction between two organisations.
+This configuration of Fabric network provides developers with the opportunity to quickly debug a chaincode. A default two-organisations network is provided where developers could subject their chaincode to interaction between two organisations.
 
 Please refer to [this for a detail description](./docs/two-orgs.md)
 

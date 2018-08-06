@@ -38,8 +38,8 @@ A transaction to initiate payment from `John` to `Paul`.
 ## Steps
 
 1. Open a Terminal.
-2. Navigate ( `cd` ) into `./consortium/two-orgs`.
-3. Run the command `./fabricOps.sh init`
+2. Navigate ( `cd` ) into `./consortium/twoorgs`.
+3. Run the command `./fabricOps.sh init` - NOTE: on Ubuntu/Linux you may need to run the command `sudo ./fabricOps.sh init`.
 4. Verify that you see operations to download images operations to create genesis.block and that there is no error. Also verify that these folders are also created: `./assets/channel-artefacts` and `./assets/crypto-config`.
 5. Run the command `./fabricOps.sh start-network`
 6. Run the command `./fabricOps.sh status` and verify if items (a) are all Up
