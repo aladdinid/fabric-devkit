@@ -16,13 +16,13 @@ It is **not** to be replicated in a mission critical or production environment. 
 | --- | --- |
 | api/ | This folder contains nodeJS Express code for generating a RESTFul API to enable developers to invoke chaincode via a RESTful client such as Postman. |
 | assets/ | Cryptographic and Fabric channel configuration assets. These are generated from executing the `fabricOps.sh`. |
-| scipts/ | A series of low-level Bash shell scripts for configuring the Fabric network, installing and instantiating chaincodes. Note: These scripts are intended to be executed from within the `cli` containers based on `fabric-tools` images provided by Hyperledger. |
+| scripts/ | A series of low-level Bash shell scripts for configuring the Fabric network, installing and instantiating chaincodes. Note: These scripts are intended to be executed from within the `cli` containers based on `fabric-tools` images provided by Hyperledger. |
 | chaincodeOps.sh | A Bash shell script to aggregate the low-level scripts to support installation, instantiation and invocation of chaincode. Note: this script is hard-coded to work with chaincode named `mycc` and `verion 1.0` only. |
 | channelOps.sh | A Bash shell script to aggregate the low-level scripts to create a channel name `mychannel`. |
 | `configtx.yaml` | A script used to generate artefacts for configuration a Fabric channel. |
 | `crypto-config.yaml` | A script used to generate cryptographic materials to support the creation of Member Service Provider. These are hardcoded to support the two-organisations configuration defined in `network-config.yaml` |
 | fabricOps.sh | A Bash script to support the operations to prepare artefacts for instantiation of a Fabric network and deployment of chaincodes. |
-| generate-chanconfig.sh | A component of `fabricOps.sh` to support the creation of artefacts for the channel configuration. |
+| generate-chainconfig.sh | A component of `fabricOps.sh` to support the creation of artefacts for the channel configuration. |
 | generate-crypto.sh | A component of `fabricOps.sh` to support the creation of cryptographic artefacts. |
 | `network-config.yaml` | The script for configuring docker containers used to instantiate Fabric network and support the creation of supporting artefacts. |
 
@@ -33,17 +33,17 @@ The consortium is hard coded to demonstrate payment between two hypothetical ent
 
 At the instantiation of the chaincode, the `Paul` is initialised with `10` units of unspecified value, and `John` is initialised with `20` units.
 
-A transaction to initate payment from `John` to `Paul`.
+A transaction to initiate payment from `John` to `Paul`.
 
 ## Steps
 
 1. Open a Terminal.
 2. Navigate ( `cd` ) into `./consortium/two-orgs`.
-3. Run the command `fabricOps.sh init`
+3. Run the command `./fabricOps.sh init`
 4. Verify that you see operations to download images operations to create genesis.block and that there is no error. Also verify that these folders are also created: `./assets/channel-artefacts` and `./assets/crypto-config`.
-5. Run the command `fabricOps.sh start-network`
-6. Run the command `fabricOps.sh status` and verify if items (a) are all Up
-7. Run the command `fabricOps.sh configure-network`
+5. Run the command `./fabricOps.sh start-network`
+6. Run the command `./fabricOps.sh status` and verify if items (a) are all Up
+7. Run the command `./fabricOps.sh configure-network`
 8. Verify that there is no error.
 9. Use your RESTful Client (e.g. postman) and execute a POST `http://localhost:8081/invoke` with this body `{ "fcn":"pay", "args":["Paul","1","John"] }` -- i.e. read pay `Paul` amount `1` from `John` .
 10. Verify that you get a successful response.
