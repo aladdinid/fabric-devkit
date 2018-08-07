@@ -50,6 +50,16 @@ A transaction to initiate payment from `John` to `Paul`.
 11. Run the command `docker logs dev-peer0.org1.fabric.network-mycc-1.0` and verify that you see Item (B) -- i.e. this proves that the transactions is logged in `Org1`
 12. Run the command `docker logs dev-peer0.org2.fabric.network-mycc-1.0` and verify that you see Item (C) -- i.e. this proves that the transactions is logged in `Org2`
 
+---
+**Note**
+
+The Fabric network uses a piece of technology known as Docker container for instantiation. If you encounter any error as you step through the process, you should try to reset the network by manipulating docker containers. Use either one of the following commands:
+
+* `fabricOps.sh clean` - this is a gentlier way of resetting the network. It will only attempt to reset aspects of the artefacts related to the network and leave any containers not related the Fabric network untouch. For example, if you have a none Fabric container that you are using for other purposes.
+* `fabricOps.sh cleanall` - this is a catch all way of reseting your network. It will clean all Fabric and non-Fabric containers. Sometimes, you might need to do this because existing configuration may be sticky and you need to have a total clean setting.
+* Using a combination of docker commands to selectively remove containers that underpin the operations of the Fabric network, e.g. `docker ps` and `docker rm`, etc. Please refer to documentation from `Docker`.
+---
+
 Item (A):
 ```
 api.org1.fabric.network
