@@ -1,0 +1,14 @@
+{
+    "host":"localhost",
+    "port":"8080",
+    "configFile": "org2-config.yaml",
+    "blockchain": {
+        "org": "org2",
+        "peer": "peer0.org2.fabric.network",
+        "loggingName": "blockchain",
+        "loggingLevel": "error",
+        "chaincodeName": "mycc",
+        "channelName": "mychannel",
+        "targets":["peer0.org2.fabric.network","peer0.org1.fabric.network"]
+    }
+}
