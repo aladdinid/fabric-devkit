@@ -10,7 +10,7 @@ The current version of this Fabric development kit does not yet support the Wind
 
 # Pre-requisites
 
-1. Install [Go tools](http://golang.org/dl).
+1. Install [Go](http://golang.org/dl).
 
     * for macOS, we recommend installing via [homebrew](http://brew.sh/);
 
