@@ -92,6 +92,24 @@ func pay(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success([]byte("Payment done"))
 }
 
+// Queries
+func query(stub shim.ChaincodeStubInterface) pb.Response {
+
+	logger.Info("query")
+
+	args := stub.GetStringArgs()
+
+	queryStatement := args[1]
+
+	queryResult, err := stub.GetState(queryStatement)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to execute query find %v and error %v", queryStatement, err))
+	}
+
+	return shim.Success([]byte(fmt.Sprintf("%v has %v", queryStatement, string(queryResult))))
+
+}
+
 // SimpleChaincode representing a class of chaincode
 type SimpleChaincode struct{}
 
@@ -113,6 +131,10 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	if fcn == "pay" {
 		return pay(stub)
+	}
+
+	if fcn == "query" {
+		return query(stub)
 	}
 
 	return shim.Success([]byte("Invoke"))
