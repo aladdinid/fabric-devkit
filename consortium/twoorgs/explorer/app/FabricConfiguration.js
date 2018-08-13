@@ -66,7 +66,7 @@ class FabricConfiguration {
 			var properties = Object.keys(org);
 			properties.forEach(prop => {
 				if (typeof org[prop] === 'object' && 'requests' in org[prop] && 'events' in org[prop]
-					&& 'server_hostname' in org[prop] && 'tls_cacerts' in org[prop])
+					&& 'server-hostname' in org[prop] && 'tls_cacerts' in org[prop])
 					peerlist.push({
 						key: ele,
 						value: prop

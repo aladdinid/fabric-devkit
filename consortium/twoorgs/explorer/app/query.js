@@ -28,6 +28,7 @@ var FabricCAService = require('fabric-ca-client');
 
 var peerFailures = 0;
 var queryChaincode = function (peer, channelName, chaincodeName, fcn, args, org) {
+
 	var channel = fabricClientProxy.getChannelForOrg(org);
 	var client = fabricClientProxy.getClientForOrg(org);
 

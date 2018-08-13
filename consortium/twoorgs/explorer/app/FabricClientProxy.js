@@ -166,7 +166,7 @@ class FabricClientProxy {
 						configuration.getOrg(org)[key].requests,
 						{
 							pem: Buffer.from(data).toString(),
-							'ssl-target-name-override': configuration.getOrg(org)[key]['server_hostname']
+							'ssl-target-name-override': configuration.getOrg(org)[key]['server-hostname']
 						}
 					);
 				} else {

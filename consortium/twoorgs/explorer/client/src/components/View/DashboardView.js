@@ -43,7 +43,7 @@ class DashboardView extends Component {
                         </Card>
                         <Card className="count-card dark-card" >
                             <CardBody>
-                                <h1>{this.props.countHeader.countHeader.peerCount}</h1>
+                                <h1>2</h1>
                                 <h4><FontAwesome name="users" />Nodes</h4>
                             </CardBody>
                         </Card>
