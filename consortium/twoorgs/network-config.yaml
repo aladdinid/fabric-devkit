@@ -241,8 +241,6 @@ services:
 # Org1
   api.org1.fabric.network:
     container_name: api.org1.fabric.network
-    build:
-      context: ./api
     image: aladdinid/fabric-rest-api
     environment:
       - GOPATH=/opt
@@ -265,3 +263,35 @@ services:
       - ./assets:/opt/orgs/assets
     ports:
       - 8082:8080
+
+#Postgress
+  postgres.fabric.network:
+    container_name: postgres.fabric.network
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./explorer/app/db/explorerpg.sql:/var/pg/explorerpg.sql
+      - ./explorer/app/db/updatepg.sql:/var/pg/updatepg.sql
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+#Explorer
+  explorer.fabric.network:
+    container_name: explorer.fabric.network
+    image: aladdinid/fabric-explorer
+    environment:
+      PUBLIC_URL: "http://explorer.fabric.network:8080"
+    working_dir: /opt
+    volumes:
+      - ./assets:/opt/assets
+    ports:
+      - 9000:8080

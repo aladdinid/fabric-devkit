@@ -6,9 +6,8 @@ RUN apt-get update -qq && apt-get upgrade -yq\
     && apt-get install -y nodejs build-essential
 
 ADD . /opt
-RUN cd /opt && npm install
 
-WORKDIR /opt
+RUN cd /opt && npm install
 
 EXPOSE 8080
 
