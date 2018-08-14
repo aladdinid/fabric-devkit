@@ -1,12 +1,26 @@
 # Introduction
 
-The artefacts, or Fabric development kit, found in this Git repo is intended to help developers, using macOS or Linux-based platforms:
+The artefacts, or Fabric development kit, found in this Git repo is intended to help developers:
 
-* learn what is involved in orchestrating and instantiating a Fabric network;
+* learn what is involved in orchestrating and instantiating a Hyperledger Fabric (Fabric) network;
 * debug chaincode;
-* Customise a locally instantiable Fabric network to minic a production version.
+* customise a locally instantiable Fabric network to minic a production version for testing.
 
-The current version of this Fabric development kit does not yet support the Windows platform or to customise a Farbic network. This may be incorporated in future version.
+# Features
+
+**Current version**: 1.0.1-alpha
+
+## Version: 1.0
+
+1. A simple end-to-end command line (CLI) solution based on a fixed two-organisations Fabric network.
+2. Verified for used on macOS and Linux only
+3. Compatible with Docker engine 18.06.0-ce and Docker compose 1.22.0
+
+## Version: 1.0.1-alpha
+
+1. Features from v1.0
+2. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
+3. This is only a alpha primarily for preview purposes only.
 
 # Pre-requisites
 
@@ -22,7 +36,6 @@ The current version of this Fabric development kit does not yet support the Wind
 
 3. Create a folder in `$GOPATH/src` and navigate to it. Under the folder clone this repository.
 
-
 # Content
 
 | Item | Description |
@@ -32,7 +45,7 @@ The current version of this Fabric development kit does not yet support the Wind
 | consortium | This folder contains definitions of and scripts to orchestrate Fabric network |
 | consortium/twoorgs | This is a default two organisations fabric network intended for illustration purposes only |
 
-# Two-organisations consortium
+# Two-organisations consortium
 
 This configuration of Fabric network provides developers with the opportunity to quickly debug a chaincode. A default two-organisations network is provided where developers could subject their chaincode to interaction between two organisations.
 
@@ -44,5 +57,9 @@ Aladdin Blockchain Technologies Ltd for sponsoring the effort to create this Fab
 
 # Disclaimer
 
-Unless otherwise specified, the artefacts in this repository are distributed under Apache 2 license. In particular, the chaincodes are provided on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+Unless otherwise specified, the artefacts in this repository are distributed under Apache 2 license. 
+
+All artefacts found here are provided on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+Aladdin Blockchain Technologies Ltd has the descretion in deciding any features to be incorporated or removed from this repository.
 
