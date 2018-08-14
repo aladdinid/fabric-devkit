@@ -203,7 +203,6 @@ function* savePeerlist(channelName) {
     });
     let peerlen = peerlists.length
     for (let i = 0; i < peerlen; i++) {
-        console.log("------------------------->", i);
         var peers = {};
         let peerlist = peerlists[i]
         peers.name = channelName;
