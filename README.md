@@ -3,8 +3,7 @@
 The artefacts, or Fabric development kit, found in this Git repo is intended to help developers:
 
 * learn what is involved in orchestrating and instantiating a Hyperledger Fabric (Fabric) network;
-* debug chaincode;
-* customise a locally instantiable Fabric network to minic a production version for testing.
+* debug chaincode.
 
 # Features
 
@@ -21,6 +20,11 @@ The artefacts, or Fabric development kit, found in this Git repo is intended to 
 1. Features from v1.0
 2. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
 3. This is only a alpha primarily for preview purposes only.
+
+## For future considerations
+
+1. Feature to enable developer customise a locally instantiable Fabric network to minic a production version for testing.
+2. Feature to enable developer deploy a development only Fabric network in a shared platform (i.e. cloud, etc.) to enable multiple developers to collaborate.
 
 # Pre-requisites
 
