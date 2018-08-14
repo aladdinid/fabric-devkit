@@ -9,7 +9,7 @@ The artefacts, or Fabric development kit, found in this Git repo is intended to 
 
 **Current version**: 1.0.1-alpha
 
-## Version: 1.0
+## Version: 1.0
 
 1. A simple end-to-end command line (CLI) solution based on a fixed two-organisations Fabric network.
 2. Verified for used on macOS and Linux only
