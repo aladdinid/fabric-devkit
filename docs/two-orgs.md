@@ -26,7 +26,9 @@ It is **not** to be replicated in a mission critical or production environment. 
 | generate-crypto.sh | A component of `fabricOps.sh` to support the creation of cryptographic artefacts. |
 | `network-config.yaml` | The script for configuring docker containers used to instantiate Fabric network and support the creation of supporting artefacts. |
 
-# How to use two-organisations consortium
+# Using this consortium AS-IS to demonstrate an end-to-end lifecycle
+
+The following describe how you would use this consortium to illustrate the process of instantiating a two-organisations Fabric network, deploying the `minimalcc` chaincode and inspecting the chaincode.
 
 ## Context
 The consortium is hard coded to demonstrate payment between two hypothetical entities (`Paul` and `John`). 
@@ -49,6 +51,9 @@ A transaction to initiate payment from `John` to `Paul`.
 10. Verify that you get a successful response.
 11. Run the command `docker logs dev-peer0.org1.fabric.network-mycc-1.0` and verify that you see Item (B) -- i.e. this proves that the transactions is logged in `Org1`
 12. Run the command `docker logs dev-peer0.org2.fabric.network-mycc-1.0` and verify that you see Item (C) -- i.e. this proves that the transactions is logged in `Org2`
+13. Run the command `./fabricOps.sh start-explorer`
+14. Use a browser and point to the url `http://localhost:9000` to view the blockchain explorer dashboard
+15. Use your RESTful client to invoke the chaincode and see changes in the number of transactions and blocks, see Item (D)
 
 ---
 **Note**
@@ -57,6 +62,7 @@ The Fabric network uses a piece of technology known as Docker container for inst
 
 * `./fabricOps.sh clean` - this is a gentlier way of resetting the network. It will only attempt to reset aspects of the artefacts related to the network and leave any containers not related the Fabric network untouch. For example, any non-Fabric containers that you are using for other purposes.
 * `./fabricOps.sh cleanall` - this is a catch all way of reseting your network. It will clean all Fabric and non-Fabric containers. Sometimes, you might need to do this because existing configuration may be sticky and you need to have a total clean setting.
+* `./fabricOps.sh clean-explorer` - this resets the explorer feature without destroying any running Fabric network.
 * Using a combination of docker commands to selectively remove containers that underpin the operations of the Fabric network, e.g. `docker ps` and `docker rm`, etc. Please refer to [documentation from Docker](https://docs.docker.com/engine/reference/commandline/docker/#child-commands).
 ---
 
@@ -95,3 +101,9 @@ Item (C):
 <time stamp> [minimalcc] Infof -> INFO 007 Before payment - payerCurrentState: 20
 <time stamp> [minimalcc] Infof -> INFO 008 After payment - payee state: 11 payer state: 19
 ```
+
+Item (D):
+
+1. There may be bugs in Hyperledger Blockchain Explorer.
+2. Please report any bugs
+3. Future version of this development kit may replace Hyperledger Blockchain Explorer with a different version.

@@ -2,7 +2,7 @@
 
 . ./scripts/common.sh
 
-usage_message="Useage: $0 init | start-network | configure-network | status| clean | cleanall"
+usage_message="Useage: $0 init | start-network | configure-network | start-explorer | status| clean | cleanall | clean-explorer"
 
 ARGS_NUMBER="$#"
 COMMAND="$1"
@@ -23,6 +23,11 @@ function pullDockerImages(){
 
     docker pull hyperledger/fabric-couchdb:$COUCHDB_VERSION
     docker tag hyperledger/fabric-couchdb:$COUCHDB_VERSION hyperledger/fabric-couchdb
+
+    docker pull library/postgres
+
+    docker build -f api/Dockerfile -t aladdinid/fabric-rest-api ./api
+    docker build -f explorer/Dockerfile -t aladdinid/fabric-explorer ./explorer
 
 }
 
@@ -104,8 +109,23 @@ function cleanall(){
     docker rmi -f $(docker images -q)
 }
 
+function cleanExplorer(){
+    docker rm -f explorer.fabric.network
+    docker rm -f postgres.fabric.network
+    docker rmi -f aladdinid/fabric-explorer
+    docker build -f explorer/Dockerfile -t aladdinid/fabric-explorer ./explorer
+    docker rmi -f library/postgres
+    docker pull library/postgres
+}
+
 function networkStatus(){
     docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}" --filter "name=fabric.network"
+}
+
+function startExplorer(){
+    docker-compose -f ./network-config.yaml up -d postgres.fabric.network
+    docker-compose -f ./network-config.yaml up -d explorer.fabric.network
+    docker-compose -f ./network-config.yaml up -d adminer
 }
 
 verifyArg
@@ -125,6 +145,9 @@ case $COMMAND in
     "configure-network")
         configureNetwork
         ;;
+    "start-explorer")
+        startExplorer
+        ;;
     "status")
         networkStatus
         ;;
@@ -135,6 +158,9 @@ case $COMMAND in
     "cleanall")
         cleanall
         cleanAssets
+        ;;
+    "clean-explorer")
+        cleanExplorer
         ;;				
     *)
         echo $usage_message
