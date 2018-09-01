@@ -1,3 +1,11 @@
+# Important notice
+
+Following from a recent Hyperledger workshop sponsored by [Cyberport HK](https://www.cyberport.hk/en), this repo is being reorganised to accommodate feedbacks from the workshop participants.
+
+The maintainer of this repo would like to thank the participants of the workshop for making the effort to provide feedback to help improve this project.
+
+If you have already clone or forked this repo, please be aware that there will be significant changes moving forward.
+
 # Introduction
 
 The artefacts, or Fabric development kit, found in this Git repo is intended to help developers:
@@ -7,19 +15,15 @@ The artefacts, or Fabric development kit, found in this Git repo is intended to 
 
 # Features
 
-**Current version**: 1.0.1-alpha
+**Current version**: 0.0.1-alpha
 
-## Version: 1.0
+## Version: 0.1.0-alpha
 
 1. A simple end-to-end command line (CLI) solution based on a fixed two-organisations Fabric network.
 2. Verified for used on macOS and Linux only
 3. Compatible with Docker engine 18.06.0-ce and Docker compose 1.22.0
-
-## Version: 1.0.1-alpha
-
-1. Features from v1.0
-2. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
-3. This is only a alpha primarily for preview purposes only.
+4. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
+5. This is only a alpha primarily for preview purposes only.
 
 ## For future considerations
 
