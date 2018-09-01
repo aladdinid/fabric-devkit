@@ -1,50 +1,22 @@
-# Important notice
+# Aladdin's Fabric Development Kit
 
-Following from a recent Hyperledger workshop sponsored by [Cyberport HK](https://www.cyberport.hk/en), this repo is being reorganised to accommodate feedbacks from the workshop participants.
+Aladdin's Fabric development kit, codename `Maejor`, was created to support developers building [Aladdin Blockchain Technologies Ltd](https://aladdinid.com/) a Fabric based [Proof-of-Concept (PoC) medical audit trail](https://www.youtube.com/watch?v=vJmhwymh-eU). Following from the PoC, Aladdin has decided to open source the developer kit.
 
-The maintainer of this repo would like to thank the participants of the workshop for making the effort to provide feedback to help improve this project.
+The development kit was intended to help developers:
 
-If you have already clone or forked this repo, please be aware that there will be significant changes moving forward.
+* learn, through experimentation, the system architecture of Hyperledger Fabric (Fabric);
+* define, instantiate and configure a Fabric network to support development effort;
+* verify that apps developed to interact with the Fabric network meets expectation.
 
-# Introduction
+## Acknowledgement
 
-The artefacts, or Fabric development kit, found in this Git repo is intended to help developers:
+The maintainer(s) of this project is grateful to Aladdin for sponsoring the effort to create this developer kit.
 
-* learn what is involved in orchestrating and instantiating a Hyperledger Fabric (Fabric) network;
-* debug chaincode.
+## Release notes
 
-# Features
+Under development. Features to be determined.
 
-**Current version**: 0.0.1-alpha
-
-## Version: 0.1.0-alpha
-
-1. A simple end-to-end command line (CLI) solution based on a fixed two-organisations Fabric network.
-2. Verified for used on macOS and Linux only
-3. Compatible with Docker engine 18.06.0-ce and Docker compose 1.22.0
-4. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
-5. This is only a alpha primarily for preview purposes only.
-
-## For future considerations
-
-1. Feature to enable developer customise a locally instantiable Fabric network to minic a production version for testing.
-2. Feature to enable developer deploy a development only Fabric network in a shared platform (i.e. cloud, etc.) to enable multiple developers to collaborate.
-
-# Pre-requisites
-
-1. Install [Go](http://golang.org/dl).
-
-    * for macOS, we recommend installing via [homebrew](http://brew.sh/);
-
-    * for other platforms please refer to [installation guide](https://golang.org/doc/install).
-
-2. Set the environmental variable GOPATH to a reference a directory to host your Go source codes and binaries (i.e. Go workspace). For example,
-
-    `export GOPATH=$HOME/go-projects`
-
-3. Create a folder in `$GOPATH/src` and navigate to it. Under the folder clone this repository.
-
-# Content
+## Content
 
 | Item | Description |
 | --- | --- |
@@ -53,21 +25,14 @@ The artefacts, or Fabric development kit, found in this Git repo is intended to 
 | consortium | This folder contains definitions of and scripts to orchestrate Fabric network |
 | consortium/twoorgs | This is a default two organisations fabric network intended for illustration purposes only |
 
-# Two-organisations consortium
+## Contributions and feedback
 
-This configuration of Fabric network provides developers with the opportunity to quickly debug a chaincode. A default two-organisations network is provided where developers could subject their chaincode to interaction between two organisations.
+The maintainer(s) of this project welcomes feedback and contribution from anyone.
 
-Please refer to [this for a detail description](./docs/two-orgs.md)
+To manage the development lifecycle, Aladdin Blockchain Technologies Ltd designated maintainer(s) shall retain sole descretion in deciding any features to be incorporated or removed from this repository.
 
-# Acknowledgement
+## Disclaimer
 
-Aladdin Blockchain Technologies Ltd for sponsoring the effort to create this Fabric Development Kit 
-
-# Disclaimer
-
-Unless otherwise specified, the artefacts in this repository are distributed under Apache 2 license. 
+Unless otherwise specified, the artefacts in this repository are distributed under Apache 2 license.
 
 All artefacts found here are provided on "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-Aladdin Blockchain Technologies Ltd has the descretion in deciding any features to be incorporated or removed from this repository.
-
