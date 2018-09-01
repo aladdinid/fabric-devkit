@@ -7,20 +7,11 @@ The artefacts, or Fabric development kit, found in this Git repo is intended to 
 
 # Features
 
-**Current version**: 0.1.1-alpha
-
-## Version: 0.1.1-alpha
-
 1. A simple end-to-end command line (CLI) solution based on a fixed two-organisations Fabric network.
 2. Verified for used on macOS and Linux only
 3. Compatible with Docker engine 18.06.0-ce and Docker compose 1.22.0
 4. Hyperledger Blockchain Explorer integrated. This is based on Explorer version 0.3.1 AS-IS.
 5. This is only a alpha primarily for preview purposes only.
-
-## For future considerations
-
-1. Feature to enable developer customise a locally instantiable Fabric network to minic a production version for testing.
-2. Feature to enable developer deploy a development only Fabric network in a shared platform (i.e. cloud, etc.) to enable multiple developers to collaborate.
 
 # Pre-requisites
 
