@@ -16,7 +16,9 @@ limitations under the License.
 
 package main
 
-import "github.com/aladdinid/fabric-devkit/maejor/cmd"
+import (
+	"github.com/aladdinid/fabric-devkit/maejor/cmd"
+)
 
 func main() {
 	cmd.Execute()

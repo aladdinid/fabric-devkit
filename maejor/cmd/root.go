@@ -18,7 +18,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -51,6 +50,6 @@ var rootCmd = &cobra.Command{
 // Execute cobra chain of commands
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		os.Exit(1)
+		panic(err)
 	}
 }
