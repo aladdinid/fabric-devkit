@@ -16,6 +16,13 @@ func locationOfTestFixture(t *testing.T) string {
 	return pwd
 }
 
+func createTestConfigFile(t *testing.T) {
+	_, err := os.Create(ConfigFilename)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func verifyTestConfigFileExist(t *testing.T) {
 	configPath := locationOfTestFixture(t)
 	configFile := filepath.Join(configPath, config)
@@ -38,5 +45,26 @@ func TestConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	verifyTestConfigFileExist(t)
+	removeTestConfigFile(t)
+}
+
+func TestSearch(t *testing.T) {
+
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	noConfigPath := filepath.Join(pwd, "..", "consortium")
+	result := Search(noConfigPath)
+	if len(result) != 0 {
+		t.Fatalf("Expected 0, Got: %d", len(result))
+	}
+
+	createTestConfigFile(t)
+	result = Search(pwd)
+	if len(result) == 0 {
+		t.Fatalf("Expected: 1, Got: %d", len(result))
+	}
 	removeTestConfigFile(t)
 }
