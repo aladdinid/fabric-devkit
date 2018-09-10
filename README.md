@@ -12,7 +12,7 @@ The development kit was intended to help developers:
 
 The maintainer(s) of this project is grateful to Aladdin for sponsoring the effort to create this developer kit.
 
-## Release notes
+## Release notes
 
 Under development. Features to be determined.
 
