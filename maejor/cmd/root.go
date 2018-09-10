@@ -18,8 +18,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const description = `maejor is the command-line interface (cli) for 
@@ -39,12 +41,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.`
 
+var cfgFile string
+
 var rootCmd = &cobra.Command{
 	Use:   "maejor",
 	Short: "maejor is a cli for Aladdin's Fabric Developer Kit",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(description)
 	},
+}
+
+func init() {
+	cobra.OnInitialize(initConfig)
+}
+
+func initConfig() {
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	viper.AddConfigPath(pwd)
+	viper.SetConfigName(".maejor")
+
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err)
+	}
 }
 
 // Execute cobra chain of commands
