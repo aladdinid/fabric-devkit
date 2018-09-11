@@ -1,3 +1,3 @@
 package devkit
 
-//go:generate go run config/main.go
+//go:generate go run maejor/config/main.go

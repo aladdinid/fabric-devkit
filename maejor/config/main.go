@@ -5,7 +5,7 @@ package main
 import (
 	"os"
 
-	"github.com/aladdinid/fabric-devkit/config"
+	"github.com/aladdinid/fabric-devkit/maejor/config"
 )
 
 func main() {
