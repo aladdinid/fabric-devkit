@@ -54,8 +54,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 }
 
-func initConfig(){
-	if err := config.Initialize(){
+func initConfig() {
+	if err := config.Initialize(); err != nil {
 		panic(err)
 	}
 }
