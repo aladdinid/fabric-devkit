@@ -17,6 +17,15 @@ ConsortiumPath: {{.ProjectPath}}/network
 CryptoConfigPath: {{.ProjectPath}}/crypto-config
 ChannelConfigPath: {{.ProjectPath}}/channel-artefacts
 
+containers:
+   hyperledger:
+      - hyperledger/fabric-ca:x86_64-1.1.0
+      - hyperledger/fabric-peer:x86_64-1.1.0
+      - hyperledger/fabric-orderer:x86_64-1.1.0
+      - hyperledger/fabric-ccenv:x86_64-1.1.0
+      - hyperledger/fabric-tools:x86_64-1.1.0
+      - hyperledger/fabric-couchdb:x86_64-1.0.6
+
 network:
    domain: "fabric.network"
    organizations:

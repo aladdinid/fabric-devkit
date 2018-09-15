@@ -43,3 +43,10 @@ func TestOrgnizations(t *testing.T) {
 		t.Fatalf("Expect: 2 Got: %d", len(result))
 	}
 }
+
+func TestContainersHyperledger(t *testing.T) {
+	result := config.Hyperledger()
+	if len(result) != 6 {
+		t.Fatalf("Expect: 6 Got: %d", len(result))
+	}
+}
