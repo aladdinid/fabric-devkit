@@ -18,10 +18,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/aladdinid/fabric-devkit/maejor/config"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 const description = `maejor is the command-line interface (cli) for 
@@ -55,15 +54,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 }
 
-func initConfig() {
-	pwd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	viper.AddConfigPath(pwd)
-	viper.SetConfigName(".maejor")
-
-	if err := viper.ReadInConfig(); err != nil {
+func initConfig(){
+	if err := config.Initialize(){
 		panic(err)
 	}
 }

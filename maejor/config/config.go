@@ -5,16 +5,23 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/spf13/viper"
 )
 
 // ConfigFilename is the default name for the configuration file
 const ConfigFilename = ".maejor.yaml"
 
-var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`
-ProjectPath: {{.ProjectPath}}
+var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
 ConsortiumPath: {{.ProjectPath}}/network
 CryptoConfigPath: {{.ProjectPath}}/crypto-config
 ChannelConfigPath: {{.ProjectPath}}/channel-artefacts
+
+network:
+   domain: "fabric.network"
+   organizations:
+     - org1
+     - org2
 `))
 
 // Create create configuration file ".maejor.yaml" in
@@ -56,4 +63,20 @@ func Search(rootPath string) []string {
 	}
 
 	return result
+}
+
+// Initialize viper framework
+func Initialize() error {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	viper.AddConfigPath(pwd)
+	viper.SetConfigName(".maejor")
+
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+
+	return nil
 }
