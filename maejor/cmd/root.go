@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/aladdinid/fabric-devkit/maejor/config"
 	"github.com/spf13/cobra"
@@ -57,13 +58,13 @@ func init() {
 
 func initConfig() {
 	if err := config.Initialize(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
 // Execute cobra chain of commands
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
