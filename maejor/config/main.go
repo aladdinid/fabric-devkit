@@ -15,6 +15,9 @@ func main() {
 		panic(err)
 	}
 
+	configFiles := config.Search(pwd)
+	os.Remove(configFiles[0])
+
 	if err := config.Create(pwd, pwd); err != nil {
 		panic(err)
 	}

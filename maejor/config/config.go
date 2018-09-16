@@ -82,10 +82,31 @@ func Initialize() error {
 	}
 	viper.AddConfigPath(pwd)
 	viper.SetConfigName(".maejor")
+	viper.WatchConfig()
 
 	if err := viper.ReadInConfig(); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// ProjectPath returns the project path
+func ProjectPath() string {
+	return viper.GetString("ProjectPath")
+}
+
+// Hyperledger return a list of docker images
+func Hyperledger() []string {
+	return viper.GetStringSlice("containers.hyperledger")
+}
+
+// Domain returns configuration
+func Domain() string {
+	return viper.GetString("network.domain")
+}
+
+// Organizations returns a list of organizations
+func Organizations() []string {
+	return viper.GetStringSlice("network.organizations")
 }
