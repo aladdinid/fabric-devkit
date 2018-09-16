@@ -45,7 +45,7 @@ func TestOrgnizations(t *testing.T) {
 }
 
 func TestContainersHyperledger(t *testing.T) {
-	result := config.Hyperledger()
+	result := config.HyperledgerImages()
 	if len(result) != 6 {
 		t.Fatalf("Expect: 6 Got: %d", len(result))
 	}

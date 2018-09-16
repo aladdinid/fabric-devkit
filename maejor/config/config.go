@@ -96,8 +96,8 @@ func ProjectPath() string {
 	return viper.GetString("ProjectPath")
 }
 
-// Hyperledger return a list of docker images
-func Hyperledger() []string {
+// HyperledgerImages return a list of fabric images
+func HyperledgerImages() []string {
 	return viper.GetStringSlice("containers.hyperledger")
 }
 
