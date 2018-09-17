@@ -14,74 +14,11 @@ limitations under the License.
 package docker
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"log"
 	"os"
-	"strings"
-
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 )
-
-var cli *client.Client
-var ctx = context.Background()
-
-func init() {
-	c, err := client.NewClientWithOpts(client.WithVersion("1.38"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	cli = c
-}
-
-func pullImage(name string) (io.ReadCloser, error) {
-
-	if cli == nil {
-		return nil, fmt.Errorf("session not started")
-	}
-
-	reader, err := cli.ImagePull(ctx, name, types.ImagePullOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	return reader, nil
-}
-
-func tagImage(source string, target string) error {
-
-	if cli == nil {
-		return fmt.Errorf("session not started")
-	}
-
-	err := cli.ImageTag(ctx, source, target)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func tagImageAsLatest(source string) string {
-
-	result := strings.Split(source, ":")
-	result[1] = "latest"
-	return strings.Join(result, ":")
-
-}
-
-func tagImagesAsLatest(sources []string) []string {
-
-	var result []string
-	for _, source := range sources {
-		replacement := tagImageAsLatest(source)
-		result = append(result, replacement)
-	}
-
-	return result
-}
 
 // PullImages pull multiple images
 func PullImages(names []string) {

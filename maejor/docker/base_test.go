@@ -1,6 +1,8 @@
 package docker
 
 import (
+	"io"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -16,6 +18,38 @@ func TestPullImage(t *testing.T) {
 	_, err = pullImage("ubuntu")
 	if err != nil {
 		t.Fatalf("Expected: no error Got: %v", err)
+	}
+
+}
+
+func pullTestImages(t *testing.T) {
+
+	reader, err := pullImage("alpine:latest")
+	if err != nil {
+		t.Fatal("Unable to pull alpine:latest")
+	}
+
+	io.Copy(os.Stdout, reader)
+
+	reader, err = pullImage("alpine:3.7")
+	if err != nil {
+		t.Fatal("Unable to pull alpine:3.7")
+	}
+
+	io.Copy(os.Stdout, reader)
+}
+
+func TestSearchImages(t *testing.T) {
+
+	pullTestImages(t)
+
+	result, err := searchImages("alpine:*")
+	if err != nil {
+		t.Fatalf("Expected: no error Got: %v", err)
+	}
+
+	if len(result) != 2 {
+		t.Fatalf("Expected: 2 Got %d", len(result))
 	}
 
 }
