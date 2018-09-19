@@ -22,7 +22,7 @@ func TestPullImage(t *testing.T) {
 
 }
 
-func pullTestImages(t *testing.T) {
+func fixturesForSearchImageTest(t *testing.T) {
 
 	reader, err := pullImage("alpine:latest")
 	if err != nil {
@@ -41,7 +41,7 @@ func pullTestImages(t *testing.T) {
 
 func TestSearchImages(t *testing.T) {
 
-	pullTestImages(t)
+	fixturesForSearchImageTest(t)
 
 	result, err := searchImages("alpine:*")
 	if err != nil {
@@ -50,6 +50,39 @@ func TestSearchImages(t *testing.T) {
 
 	if len(result) != 2 {
 		t.Fatalf("Expected: 2 Got %d", len(result))
+	}
+
+}
+
+func fixturesForRemoveImageTest(t *testing.T) []string {
+
+	reader, err := pullImage("alpine:3.5")
+	if err != nil {
+		t.Fatal("Unable to pull alpine:3.5")
+	}
+
+	io.Copy(os.Stdout, reader)
+
+	ids, err := searchImages("alpine:3.5")
+	if err != nil {
+		t.Fatal("image is not found")
+	}
+
+	return ids
+
+}
+
+func TestRemoveImage(t *testing.T) {
+
+	ids := fixturesForRemoveImageTest(t)
+
+	deleted, err := removeImage(ids[0])
+	if err != nil {
+		t.Fatalf("Expected: no err Got: %v", err)
+	}
+
+	if len(deleted) != 4 {
+		t.Fatalf("Expected: 1 Got: %d", len(deleted))
 	}
 
 }
