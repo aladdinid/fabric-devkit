@@ -110,26 +110,16 @@ type DeletedImage struct {
 	Untagged string
 }
 
-func removeImage(imageID string) ([]DeletedImage, error) {
+func removeImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
 
 	if cli == nil {
-		return []DeletedImage{}, fmt.Errorf("session not started")
+		return []types.ImageDeleteResponseItem{}, fmt.Errorf("session not started")
 	}
 
 	deletes, err := cli.ImageRemove(ctx, imageID, types.ImageRemoveOptions{})
 	if err != nil {
-		return []DeletedImage{}, err
+		return []types.ImageDeleteResponseItem{}, err
 	}
 
-	fmt.Println(deletes)
-
-	var deletedImages = []DeletedImage{}
-	for _, delete := range deletes {
-		var deletedImage DeletedImage
-		deletedImage.Deleted = delete.Deleted
-		deletedImage.Untagged = delete.Untagged
-		deletedImages = append(deletedImages, deletedImage)
-	}
-
-	return deletedImages, nil
+	return deletes, nil
 }
