@@ -17,10 +17,9 @@ func main() {
 	}
 
 	configFiles := config.Search(pwd)
-	if len(configFiles) == 0 {
-		log.Fatal(fmt.Error("Config file not found"))
+	if len(configFiles) != 0 {
+		os.Remove(configFiles[0])
 	}
-	os.Remove(configFiles[0])
 
 	if err := config.Create(pwd, pwd); err != nil {
 		log.Fatal(err)

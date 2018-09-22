@@ -22,10 +22,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var image bool
+
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init initialize the project",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("To do ....")
 	},
+}
+
+func init() {
+	initCmd.Flags().BoolVarP(&image, "images", "i", false, "Pull images from docker hub")
 }
