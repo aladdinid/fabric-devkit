@@ -17,21 +17,31 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/aladdinid/fabric-devkit/maejor/config"
+	"github.com/aladdinid/fabric-devkit/maejor/docker"
 	"github.com/spf13/cobra"
 )
 
-var image bool
+var pullImages bool
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init initialize the project",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("To do ....")
+		if pullImages {
+			pullAndRetagImages()
+		}
 	},
 }
 
 func init() {
-	initCmd.Flags().BoolVarP(&image, "images", "i", false, "Pull images from docker hub")
+	initCmd.Flags().BoolVarP(&pullImages, "pull", "p", false, "pull images from docker hub")
+}
+
+func pullAndRetagImages() {
+
+	images := config.HyperledgerImages()
+	docker.PullImages(images)
+	docker.TagImagesAsLatest(images)
+
 }
