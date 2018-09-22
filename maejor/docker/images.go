@@ -55,3 +55,22 @@ func TagImagesAsLatest(sources []string) {
 	TagImages(sources, targets)
 
 }
+
+// DeleteImages remove downloaded images
+func DeleteImages(images []string) error {
+	for _, image := range images {
+		ids, err := searchImages(image)
+		if err != nil {
+			return err
+		}
+		log.Printf("-----> %v", ids)
+		for _, id := range ids {
+			result, err := removeImage(id)
+			log.Printf("Images removed %v", result)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}

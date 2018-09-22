@@ -17,32 +17,47 @@ limitations under the License.
 package cmd
 
 import (
+	"log"
+
 	"github.com/aladdinid/fabric-devkit/maejor/config"
 	"github.com/aladdinid/fabric-devkit/maejor/docker"
 	"github.com/spf13/cobra"
 )
 
 var imagesPulled bool
-var deletedImages []string
+var imagesRemoved bool
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init initialize the project",
 	Run: func(cmd *cobra.Command, args []string) {
+		hyperledger := config.HyperledgerImages()
 		if imagesPulled {
-			pullAndRetagImages()
+			pullAndRetagImages(hyperledger)
+		}
+		if imagesRemoved {
+			err := deleteImages(hyperledger)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	},
 }
 
 func init() {
-	initCmd.Flags().BoolVarP(&imagesPulled, "pull", "p", false, "pull images from docker hub")
+	initCmd.Flags().BoolVarP(&imagesPulled, "pull", "p", false, "pull project images from docker hub")
+	initCmd.Flags().BoolVarP(&imagesRemoved, "remove", "r", false, "remove project images")
 }
 
-func pullAndRetagImages() {
-
-	images := config.HyperledgerImages()
+func pullAndRetagImages(images []string) {
 	docker.PullImages(images)
 	docker.TagImagesAsLatest(images)
+}
 
+func deleteImages(images []string) error {
+	err := docker.DeleteImages(images)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -104,19 +104,15 @@ func searchImages(source string) ([]string, error) {
 	return ids, nil
 }
 
-// DeletedImage is a structure that represents
-type DeletedImage struct {
-	Deleted  string
-	Untagged string
-}
-
 func removeImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
 
 	if cli == nil {
 		return []types.ImageDeleteResponseItem{}, fmt.Errorf("session not started")
 	}
 
-	deletes, err := cli.ImageRemove(ctx, imageID, types.ImageRemoveOptions{})
+	deletes, err := cli.ImageRemove(ctx, imageID, types.ImageRemoveOptions{
+		Force: true,
+	})
 	if err != nil {
 		return []types.ImageDeleteResponseItem{}, err
 	}
