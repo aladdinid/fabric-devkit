@@ -22,20 +22,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pullImages bool
+var imagesPulled bool
+var deletedImages []string
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init initialize the project",
 	Run: func(cmd *cobra.Command, args []string) {
-		if pullImages {
+		if imagesPulled {
 			pullAndRetagImages()
 		}
 	},
 }
 
 func init() {
-	initCmd.Flags().BoolVarP(&pullImages, "pull", "p", false, "pull images from docker hub")
+	initCmd.Flags().BoolVarP(&imagesPulled, "pull", "p", false, "pull images from docker hub")
 }
 
 func pullAndRetagImages() {
