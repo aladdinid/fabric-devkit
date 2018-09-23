@@ -52,7 +52,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(imageCmd)
 	cobra.OnInitialize(initConfig)
 }
 

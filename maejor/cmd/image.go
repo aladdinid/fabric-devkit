@@ -27,9 +27,9 @@ import (
 var imagesPulled bool
 var imagesRemoved bool
 
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "init initialize the project",
+var imageCmd = &cobra.Command{
+	Use:   "image",
+	Short: "Manage relevant docker images for the project",
 	Run: func(cmd *cobra.Command, args []string) {
 		hyperledger := config.HyperledgerImages()
 		if imagesPulled {
@@ -45,8 +45,8 @@ var initCmd = &cobra.Command{
 }
 
 func init() {
-	initCmd.Flags().BoolVarP(&imagesPulled, "pull", "p", false, "pull project images from docker hub")
-	initCmd.Flags().BoolVarP(&imagesRemoved, "remove", "r", false, "remove project images")
+	imageCmd.Flags().BoolVarP(&imagesPulled, "pull", "p", false, "pull images from docker hub")
+	imageCmd.Flags().BoolVarP(&imagesRemoved, "remove", "r", false, "remove downloaded images")
 }
 
 func pullAndRetagImages(images []string) {
