@@ -29,8 +29,11 @@ containers:
 network:
    domain: "fabric.network"
    organizations:
-     - org1
-     - org2
+     orderers:
+       - orderer
+     peers:
+       - org1
+       - org2
 `))
 
 // Create create configuration file ".maejor.yaml" in
