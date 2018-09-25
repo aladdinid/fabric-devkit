@@ -18,9 +18,9 @@ The maintainer(s) of this project is grateful to Aladdin for sponsoring the effo
 
 Please refer to branch 0.1.
 
-### v1
+### v0.2
 
-Under development. Features to be determined.
+Under development in master branch. Features to be determined.
 
 ## Content
 
