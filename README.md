@@ -14,6 +14,12 @@ The maintainer(s) of this project is grateful to Aladdin for sponsoring the effo
 
 ## Release notes
 
+### v0.1
+
+Please refer to branch 0.1.
+
+### v1
+
 Under development. Features to be determined.
 
 ## Content
