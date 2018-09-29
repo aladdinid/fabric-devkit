@@ -108,8 +108,3 @@ func HyperledgerImages() []string {
 func Domain() string {
 	return viper.GetString("network.domain")
 }
-
-// Organizations returns a list of organizations
-func Organizations() []string {
-	return viper.GetStringSlice("network.organizations")
-}
