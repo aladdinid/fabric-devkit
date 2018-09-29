@@ -1,0 +1,22 @@
+ProjectPath: <path to project>/fabric-devkit
+ConsortiumPath: <path to project>/fabric-devkit/network
+CryptoConfigPath: <path to project>/fabric-devkit/crypto-config
+ChannelConfigPath: <path to project>/fabric-devkit/channel-artefacts
+
+containers:
+   hyperledger:
+      - hyperledger/fabric-ca:x86_64-1.1.0
+      - hyperledger/fabric-peer:x86_64-1.1.0
+      - hyperledger/fabric-orderer:x86_64-1.1.0
+      - hyperledger/fabric-ccenv:x86_64-1.1.0
+      - hyperledger/fabric-tools:x86_64-1.1.0
+      - hyperledger/fabric-couchdb:x86_64-1.0.6
+
+network:
+   domain: "fabric.network"
+   organizations:
+     orderers:
+       - orderer
+     peers:
+       - org1
+       - org2
