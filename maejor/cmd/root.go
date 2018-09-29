@@ -19,6 +19,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/aladdinid/fabric-devkit/maejor/config"
 	"github.com/spf13/cobra"
@@ -57,7 +58,13 @@ func init() {
 }
 
 func initConfig() {
-	if err := config.Initialize(); err != nil {
+
+	pwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := config.Initialize(pwd, config.ConfigName); err != nil {
 		log.Fatal(err)
 	}
 }

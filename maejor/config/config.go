@@ -9,8 +9,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+// ConfigName name of the config file name without extension
+const ConfigName = ".maejor"
+
 // ConfigFilename is the default name for the configuration file
-const ConfigFilename = ".maejor.yaml"
+var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
 
 var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
 ConsortiumPath: {{.ProjectPath}}/network
@@ -78,13 +81,10 @@ func Search(rootPath string) []string {
 }
 
 // Initialize viper framework
-func Initialize() error {
-	pwd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	viper.AddConfigPath(pwd)
-	viper.SetConfigName(".maejor")
+func Initialize(configPath string, configName string) error {
+
+	viper.AddConfigPath(configPath)
+	viper.SetConfigName(configName)
 	viper.WatchConfig()
 
 	if err := viper.ReadInConfig(); err != nil {
