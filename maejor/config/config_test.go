@@ -1,5 +1,3 @@
-// +build smoke
-
 package config_test
 
 import (
