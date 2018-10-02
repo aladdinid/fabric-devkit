@@ -1,3 +1,5 @@
+// +build smoke
+
 package docker
 
 import (

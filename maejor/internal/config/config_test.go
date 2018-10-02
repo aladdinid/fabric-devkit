@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aladdinid/fabric-devkit/maejor/config"
+	"github.com/aladdinid/fabric-devkit/maejor/internal/config"
 )
 
 func TestMain(m *testing.M) {
 
-	err := config.Initialize("./fixture", "config")
+	err := config.Initialize("./testdata", "config")
 	if err != nil {
 		log.Fatalf("Unable to configure config object: %v", err)
 	}

@@ -64,6 +64,10 @@ func initConfig() {
 		log.Fatal(err)
 	}
 
+	if err := config.Create(pwd, pwd); err != nil {
+		log.Fatal(err)
+	}
+
 	if err := config.Initialize(pwd, config.ConfigName); err != nil {
 		log.Fatal(err)
 	}
