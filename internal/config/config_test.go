@@ -46,3 +46,20 @@ func TestDomain(t *testing.T) {
 		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
 	}
 }
+
+type fixtureType struct {
+	Name string
+	ID   string
+}
+
+func TestOrganizations(t *testing.T) {
+
+	result := config.Organizations()
+	actual := len(result)
+	expected := 3
+
+	if expected != actual {
+		t.Fatalf("Expected: %d items Got %d", expected, actual)
+	}
+
+}

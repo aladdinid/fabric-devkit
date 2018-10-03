@@ -32,11 +32,9 @@ containers:
 network:
    domain: "fabric.network"
    organizations:
-     orderers:
-       - orderer
-     peers:
-       - org1
-       - org2
+       - OrdererOrg
+       - Org1
+       - Org2
 `))
 
 // Create create configuration file ".maejor.yaml" in
@@ -107,4 +105,9 @@ func HyperledgerImages() []string {
 // Domain returns configuration
 func Domain() string {
 	return viper.GetString("network.domain")
+}
+
+// Organizations returns
+func Organizations() []string {
+	return viper.GetStringSlice("network.organizations")
 }

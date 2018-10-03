@@ -15,8 +15,6 @@ containers:
 network:
    domain: "fabric.network"
    organizations:
-     orderers:
-       - orderer
-     peers:
-       - org1
-       - org2
+      - OrdererOrg
+      - Org1
+      - Org2
