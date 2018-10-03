@@ -1,6 +1,6 @@
 // +build smoke
 
-package docker
+package docker_test
 
 import (
 	"io"

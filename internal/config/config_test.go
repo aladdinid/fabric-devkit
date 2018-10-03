@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aladdinid/fabric-devkit/maejor/internal/config"
+	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 func TestMain(m *testing.M) {

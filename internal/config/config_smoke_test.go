@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aladdinid/fabric-devkit/maejor/internal/config"
+	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 func fixtureCreateConfigFile(t *testing.T) func() {

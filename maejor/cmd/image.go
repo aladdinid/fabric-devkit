@@ -19,8 +19,8 @@ package cmd
 import (
 	"log"
 
-	"github.com/aladdinid/fabric-devkit/maejor/config"
-	"github.com/aladdinid/fabric-devkit/maejor/docker"
+	"github.com/aladdinid/fabric-devkit/internal/config"
+	"github.com/aladdinid/fabric-devkit/internal/docker"
 	"github.com/spf13/cobra"
 )
 

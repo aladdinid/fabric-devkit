@@ -21,7 +21,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/aladdinid/fabric-devkit/maejor/config"
+	"github.com/aladdinid/fabric-devkit/internal/config"
 	"github.com/spf13/cobra"
 )
 
