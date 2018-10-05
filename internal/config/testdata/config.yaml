@@ -1,7 +1,7 @@
 ProjectPath: <path to project>/fabric-devkit
 ConsortiumPath: <path to project>/fabric-devkit/network
-CryptoConfigPath: <path to project>/fabric-devkit/crypto-config
-ChannelConfigPath: <path to project>/fabric-devkit/channel-artefacts
+CryptoConfigPath: <path to project>/fabric-devkit/network/crypto-config
+ChannelConfigPath: <path to project>/fabric-devkit/network/channel-artefacts
 
 containers:
    hyperledger:

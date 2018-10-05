@@ -17,8 +17,8 @@ var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
 
 var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
 ConsortiumPath: {{.ProjectPath}}/network
-CryptoConfigPath: {{.ProjectPath}}/crypto-config
-ChannelConfigPath: {{.ProjectPath}}/channel-artefacts
+CryptoConfigPath: {{.ProjectPath}}/network/crypto-config
+ChannelConfigPath: {{.ProjectPath}}/network/channel-artefacts
 
 containers:
    hyperledger:
