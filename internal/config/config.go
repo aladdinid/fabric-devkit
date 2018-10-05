@@ -31,8 +31,9 @@ containers:
 
 network:
    domain: "fabric.network"
-   organizations:
+   orderer:
        - OrdererOrg
+   organizations:
        - Org1
        - Org2
 `))

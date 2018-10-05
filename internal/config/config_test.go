@@ -56,7 +56,7 @@ func TestOrganizations(t *testing.T) {
 
 	result := config.Organizations()
 	actual := len(result)
-	expected := 3
+	expected := 2
 
 	if expected != actual {
 		t.Fatalf("Expected: %d items Got %d", expected, actual)
