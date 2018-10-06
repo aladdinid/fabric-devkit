@@ -44,11 +44,21 @@ containers:
 
 network:
    domain: "fabric.network"
-   orderer:
-       - OrdererOrg
+   channelName: "TwoOrg"
+   consortium: "SampleConsortum"
    organizations:
        - Org1
        - Org2
+
+Org1:
+  name: Org1
+  id: Org1MSP
+  anchor: peer0
+	
+Org2:
+  name: Org2
+  id: Org2MSP
+  anchor: peer0
 `))
 
 // Create create configuration file ".maejor.yaml" in
@@ -119,6 +129,16 @@ func HyperledgerImages() []string {
 // Domain returns configuration
 func Domain() string {
 	return viper.GetString("network.domain")
+}
+
+// ChannelName returns a default name
+func ChannelName() string {
+	return viper.GetString("network.channelName")
+}
+
+// Consortium returns name of a consortium
+func Consortium() string {
+	return viper.GetString("network.consortium")
 }
 
 // OrgByName returns Org specification

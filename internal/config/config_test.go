@@ -61,6 +61,22 @@ func TestDomain(t *testing.T) {
 	}
 }
 
+func TestChannelName(t *testing.T) {
+	expected := "TwoOrg"
+	actual := config.ChannelName()
+	if strings.Compare(expected, actual) != 0 {
+		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	}
+}
+
+func TestConsortium(t *testing.T) {
+	expected := "SampleConsortum"
+	actual := config.Consortium()
+	if strings.Compare(expected, actual) != 0 {
+		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	}
+}
+
 func TestOrgByName(t *testing.T) {
 
 	t.Run("OrgNotFound", func(t *testing.T) {
