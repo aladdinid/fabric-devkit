@@ -19,3 +19,14 @@ type OrgSpec struct {
 	ID     string `json:"id"`
 	Anchor string `json:"anchor"`
 }
+
+// NetworkSpec represents specification of a Fabric network
+type NetworkSpec struct {
+	NetworkPath       string
+	CryptoPath        string
+	ConfigTxPath      string
+	Domain            string `json:"domain"`
+	ChannelName       string `json:"channelname"`
+	ConsortiumName    string `json:"consortiumname"`
+	OrganisationSpecs []OrgSpec
+}
