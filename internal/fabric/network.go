@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Paul Sitoh
+Copyright 2018 Aladdin Blockchain Technologies Ltd
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/aladdinid/fabric-devkit/maejor/config"
+	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 const networkConfig = `
@@ -25,9 +25,8 @@ version: '2'
 
 services:
 
-{{range $index, $orderer := .Orderers}}
-  {{$orderer.Name}}.{{$orderer.Domain}}:
-    container_name: {{$orderer.Name}}.{{$orderer.Domain}}
+  orderer.{{Domain}}:
+    container_name: orderer.{{Domain}}
     image: hyperledger/fabric-orderer
 	tty: true
     environment:
@@ -56,8 +55,7 @@ services:
       - ./assets/crypto-config/peerOrganizations/org1.fabric.network/peers/peer0.org1.fabric.network/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/org1.fabric.network/tls/ca.crt
       - ./assets/crypto-config/peerOrganizations/org2.fabric.network/peers/peer0.org2.fabric.network/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/org2.fabric.network/tls/ca.crt
     ports:
-      - 705{{$index}}:7050
-{{ end }}
+      - 7050:7050
 `
 
 // GenerateNetwork produces docker compose network compose file
