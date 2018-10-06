@@ -13,14 +13,9 @@ limitations under the License.
 
 package config
 
-// OrdererSpec is an abstraction of a fabric orderer
-type OrdererSpec struct {
-	Name   string
-	Domain string
-	MSPID  string
-}
-
-// NetworkSpec is an abstraction of a fabric configuration
-type NetworkSpec struct {
-	Orderers []OrdererSpec
+// OrgSpec represents specification of Fabric type
+type OrgSpec struct {
+	Name   string `json:"name"`
+	ID     string `json:"id"`
+	Anchor string `json:"anchor"`
 }

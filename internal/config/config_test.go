@@ -16,6 +16,7 @@ package config_test
 import (
 	"log"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -60,19 +61,73 @@ func TestDomain(t *testing.T) {
 	}
 }
 
-type fixtureType struct {
-	Name string
-	ID   string
+func TestOrgByName(t *testing.T) {
+
+	t.Run("OrgNotFound", func(t *testing.T) {
+		actual := config.OrgByName("O1")
+		expected := config.OrgSpec{}
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+	})
+
+	t.Run("VerifyType", func(t *testing.T) {
+		org := config.OrgByName("Org1")
+		value := reflect.ValueOf(&org).Elem()
+
+		expected := 3
+		actual := value.NumField()
+
+		if expected != actual {
+			t.Fatalf("Expected: %d fields Got: %d", expected, actual)
+		}
+	})
+
+	t.Run("OrgFound", func(t *testing.T) {
+		actual := config.OrgByName("Org1")
+		expected := config.OrgSpec{
+			Name:   "Org1",
+			ID:     "Org1MSP",
+			Anchor: "peer0",
+		}
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+	})
+
 }
 
-func TestOrganizations(t *testing.T) {
+func TestOrganizationSpecs(t *testing.T) {
 
-	result := config.Organizations()
-	actual := len(result)
-	expected := 2
+	t.Run("FailingNotEqual", func(t *testing.T) {
+		expected := []config.OrgSpec{}
+		actual := config.OrganizationSpecs()
 
-	if expected != actual {
-		t.Fatalf("Expected: %d items Got %d", expected, actual)
-	}
+		if reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+	})
 
+	t.Run("FoundEqual", func(t *testing.T) {
+		expected := []config.OrgSpec{
+			config.OrgSpec{
+				Name:   "Org1",
+				ID:     "Org1MSP",
+				Anchor: "peer0",
+			},
+			config.OrgSpec{
+				Name:   "Org2",
+				ID:     "Org2MSP",
+				Anchor: "peer0",
+			},
+		}
+		actual := config.OrganizationSpecs()
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+
+	})
 }

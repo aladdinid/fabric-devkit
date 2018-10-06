@@ -121,7 +121,40 @@ func Domain() string {
 	return viper.GetString("network.domain")
 }
 
-// Organizations returns
-func Organizations() []string {
-	return viper.GetStringSlice("network.organizations")
+// OrgByName returns Org specification
+func OrgByName(name string) OrgSpec {
+	value := viper.GetStringMap(name)
+
+	var spec = OrgSpec{}
+
+	name, ok := value["name"].(string)
+	if ok {
+		spec.Name = name
+	}
+
+	id, ok := value["id"].(string)
+	if ok {
+		spec.ID = id
+	}
+
+	anchor, ok := value["anchor"].(string)
+	if ok {
+		spec.Anchor = anchor
+	}
+
+	return spec
+}
+
+// OrganizationSpecs returns an array of organizations specs
+func OrganizationSpecs() []OrgSpec {
+
+	var orgSpecs = []OrgSpec{}
+
+	orgNames := viper.GetStringSlice("network.organizations")
+	for _, orgName := range orgNames {
+		orgSpec := OrgByName(orgName)
+		orgSpecs = append(orgSpecs, orgSpec)
+	}
+
+	return orgSpecs
 }
