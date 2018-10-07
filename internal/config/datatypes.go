@@ -22,6 +22,7 @@ type OrgSpec struct {
 
 // NetworkSpec represents specification of a Fabric network
 type NetworkSpec struct {
+	ScriptPath        string `json:"scriptpath"`
 	ChaincodePath     string `json:"chaincodepath"`
 	NetworkPath       string `json:"networkpath"`
 	CryptoPath        string `json:"cryptopath"`

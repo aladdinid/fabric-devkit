@@ -68,6 +68,22 @@ func TestChannelArtefactPath(t *testing.T) {
 	}
 }
 
+func TestScriptPath(t *testing.T) {
+	expected := "<path to project>/fabric-devkit/network/scripts"
+	actual := config.ScriptPath()
+	if strings.Compare(expected, actual) != 0 {
+		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	}
+}
+
+func TestChaincodePath(t *testing.T) {
+	expected := "$GOPATH/<path to chaincode>"
+	actual := config.ChaincodePath()
+	if strings.Compare(expected, actual) != 0 {
+		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	}
+}
+
 func TestHyperledgerImages(t *testing.T) {
 	expected := 6
 	result := config.HyperledgerImages()

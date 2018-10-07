@@ -30,8 +30,10 @@ var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
 
 var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
 ConsortiumPath: {{.ProjectPath}}/network
-CryptoConfigPath: {{.ProjectPath}}/network/crypto-config
-ChannelConfigPath: {{.ProjectPath}}/network/channel-artefacts
+CryptoPath: {{.ProjectPath}}/network/crypto-config
+ChannelArtefactPath: {{.ProjectPath}}/network/channel-artefacts
+ScriptPath: {{.ProjectPath}}/network/scripts
+Chaincode: $GOPATH/src/github.com/aladdinid/chaincodes
 
 containers:
    hyperledger:
@@ -134,6 +136,16 @@ func CryptoPath() string {
 // ChannelArtefactPath returns path to channel artefacts
 func ChannelArtefactPath() string {
 	return viper.GetString("ChannelArtefactPath")
+}
+
+// ScriptPath return path to scripts
+func ScriptPath() string {
+	return viper.GetString("ScriptPath")
+}
+
+// ChaincodePath returns path to chaincode
+func ChaincodePath() string {
+	return viper.GetString("ChaincodePath")
 }
 
 // HyperledgerImages return a list of fabric images

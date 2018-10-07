@@ -2,8 +2,8 @@ ProjectPath: <path to project>/fabric-devkit
 NetworkPath: <path to project>/fabric-devkit/network
 CryptoPath: <path to project>/fabric-devkit/network/crypto-config
 ChannelArtefactPath: <path to project>/fabric-devkit/network/channel-artefacts
-Scripts: <path to project>/fabric-devkit/network/scripts
-Chaincode: $GOPATH/<path to chaincode>
+ScriptPath: <path to project>/fabric-devkit/network/scripts
+ChaincodePath: $GOPATH/<path to chaincode>
 
 containers:
    hyperledger:
