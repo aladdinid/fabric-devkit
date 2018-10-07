@@ -21,6 +21,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/aladdinid/fabric-devkit/internal/configtx"
+	"github.com/aladdinid/fabric-devkit/internal/crypto"
+	"github.com/aladdinid/fabric-devkit/internal/network"
+
 	"github.com/aladdinid/fabric-devkit/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -42,19 +46,39 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.`
 
-var cfgFile string
+var networkSpec *config.NetworkSpec
 
 var rootCmd = &cobra.Command{
 	Use:   "maejor",
 	Short: "maejor is a cli for Aladdin's Fabric Developer Kit",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(description)
+		createNetworkPath()
+		if err := configtx.GenerateConfigtxSpec(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := crypto.GenerateCryptoSpec(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := network.GenerateNetworkSpec(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(imageCmd)
 	cobra.OnInitialize(initConfig)
+}
+
+func createNetworkPath() {
+
+	networkPath := config.NetworkPath()
+	if err := os.MkdirAll(networkPath, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func initConfig() {
@@ -71,6 +95,8 @@ func initConfig() {
 	if err := config.Initialize(pwd, config.ConfigName); err != nil {
 		log.Fatal(err)
 	}
+
+	networkSpec = config.NewNetworkSpec()
 }
 
 // Execute cobra chain of commands

@@ -29,7 +29,7 @@ const ConfigName = ".maejor"
 var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
 
 var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
-ConsortiumPath: {{.ProjectPath}}/network
+NetworkPath: {{.ProjectPath}}/network
 CryptoPath: {{.ProjectPath}}/network/crypto-config
 ChannelArtefactPath: {{.ProjectPath}}/network/channel-artefacts
 ScriptPath: {{.ProjectPath}}/network/scripts
