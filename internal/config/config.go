@@ -121,6 +121,21 @@ func ProjectPath() string {
 	return viper.GetString("ProjectPath")
 }
 
+// NetworkPath returns path to the network spec
+func NetworkPath() string {
+	return viper.GetString("NetworkPath")
+}
+
+// CryptoPath returns path to crypto assets
+func CryptoPath() string {
+	return viper.GetString("CryptoPath")
+}
+
+// ChannelArtefactPath returns path to channel artefacts
+func ChannelArtefactPath() string {
+	return viper.GetString("ChannelArtefactPath")
+}
+
 // HyperledgerImages return a list of fabric images
 func HyperledgerImages() []string {
 	return viper.GetStringSlice("containers.hyperledger")
