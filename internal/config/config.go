@@ -33,7 +33,7 @@ ConsortiumPath: {{.ProjectPath}}/network
 CryptoPath: {{.ProjectPath}}/network/crypto-config
 ChannelArtefactPath: {{.ProjectPath}}/network/channel-artefacts
 ScriptPath: {{.ProjectPath}}/network/scripts
-Chaincode: $GOPATH/src/github.com/aladdinid/chaincodes
+ChaincodePath: $GOPATH/src/github.com/aladdinid/chaincodes
 
 containers:
    hyperledger:
