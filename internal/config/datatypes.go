@@ -22,13 +22,30 @@ type OrgSpec struct {
 
 // NetworkSpec represents specification of a Fabric network
 type NetworkSpec struct {
-	ScriptPath        string `json:"scriptpath"`
-	ChaincodePath     string `json:"chaincodepath"`
-	NetworkPath       string `json:"networkpath"`
-	CryptoPath        string `json:"cryptopath"`
-	ConfigTxPath      string `json:"configtxpath"`
-	Domain            string `json:"domain"`
-	ChannelName       string `json:"channelname"`
-	ConsortiumName    string `json:"consortiumname"`
-	OrganisationSpecs []OrgSpec
+	ScriptPath          string `json:"scriptpath"`
+	ChaincodePath       string `json:"chaincodepath"`
+	NetworkPath         string `json:"networkpath"`
+	CryptoPath          string `json:"cryptopath"`
+	ChannelArtefactPath string `json:"configtxpath"`
+	Domain              string `json:"domain"`
+	ChannelName         string `json:"channelname"`
+	Consortium          string `json:"consortium"`
+	OrganisationSpecs   []OrgSpec
+}
+
+// NewNetworkSpec instantiate a reference to a new spec
+func NewNetworkSpec() *NetworkSpec {
+	spec := new(NetworkSpec)
+
+	spec.ChaincodePath = ChaincodePath()
+	spec.ScriptPath = ScriptPath()
+	spec.NetworkPath = NetworkPath()
+	spec.CryptoPath = CryptoPath()
+	spec.ChannelArtefactPath = ChannelArtefactPath()
+	spec.Domain = Domain()
+	spec.ChannelName = ChannelName()
+	spec.Consortium = Consortium()
+	spec.OrganisationSpecs = OrganizationSpecs()
+
+	return spec
 }

@@ -73,7 +73,7 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 		},
 	}
 	data.ChannelName = "Test"
-	data.ConsortiumName = "SampleConsortium"
+	data.Consortium = "SampleConsortium"
 
 	network.GenerateNetworkSpec(data)
 	cleanup := fixtureConfigtxYAMLExists(t)

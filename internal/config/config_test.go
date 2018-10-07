@@ -110,7 +110,7 @@ func TestChannelName(t *testing.T) {
 }
 
 func TestConsortium(t *testing.T) {
-	expected := "SampleConsortum"
+	expected := "SampleConsortium"
 	actual := config.Consortium()
 	if strings.Compare(expected, actual) != 0 {
 		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
@@ -186,4 +186,37 @@ func TestOrganizationSpecs(t *testing.T) {
 		}
 
 	})
+}
+
+func TestNewNetworkSpec(t *testing.T) {
+
+	actual := config.NewNetworkSpec()
+
+	expected := config.NetworkSpec{
+		NetworkPath:         "<path to project>/fabric-devkit/network",
+		CryptoPath:          "<path to project>/fabric-devkit/network/crypto-config",
+		ChannelArtefactPath: "<path to project>/fabric-devkit/network/channel-artefacts",
+		ScriptPath:          "<path to project>/fabric-devkit/network/scripts",
+		ChaincodePath:       "$GOPATH/<path to chaincode>",
+		ChannelName:         "TwoOrg",
+		Consortium:          "SampleConsortium",
+		Domain:              "fabric.network",
+		OrganisationSpecs: []config.OrgSpec{
+			config.OrgSpec{
+				Name:   "Org1",
+				ID:     "Org1MSP",
+				Anchor: "peer0",
+			},
+			config.OrgSpec{
+				Name:   "Org2",
+				ID:     "Org2MSP",
+				Anchor: "peer0",
+			},
+		},
+	}
+
+	if !reflect.DeepEqual(expected, *actual) {
+		t.Fatalf("Expected: %v Got: %v", expected, *actual)
+	}
+
 }

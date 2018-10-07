@@ -72,7 +72,7 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 		},
 	}
 	data.ChannelName = "Test"
-	data.ConsortiumName = "SampleConsortium"
+	data.Consortium = "SampleConsortium"
 
 	crypto.GenerateCryptoSpec(data)
 	cleanup := fixtureConfigtxYAMLExists(t)

@@ -195,14 +195,14 @@ Profiles:
             Capabilities:
                 <<: *OrdererCapabilities
         Consortiums:
-            {{.ConsortiumName}}:
+            {{.Consortium}}:
                 Organizations:
                 {{- range $index, $org := .OrganisationSpecs}} 
                   - *{{$org.Name}}
                 {{- end}}
 
     {{.ChannelName}}Channel:
-        Consortium: {{.ConsortiumName}}
+        Consortium: {{.Consortium}}
         Application:
             <<: *ApplicationDefaults
             Organizations:
