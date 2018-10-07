@@ -23,7 +23,7 @@ import (
 	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
-const networkSpec = `{{- $domain := .Domain}}
+const networkSpec = `{{- $domain := .Domain}} {{- $chaincodepath := .ChaincodePath}}
 version: '2'
 
 services:
@@ -153,7 +153,7 @@ services:
       - ./crypto-config/ordererOrganizations/{{$domain}}/orderers/orderer.{{$domain}}/:/etc/hyperledger/fabric/crypto-config/orderer/
       - ./channel-artefacts/:/opt/gopath/src/github.com/hyperledger/fabric/channel-artefacts/
       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/scripts
-      - ../../chaincodes/:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
+      - {{$chaincodepath}}:/opt/gopath/src/github.com/hyperledger/fabric/chaincodes/
     depends_on:
       - {{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
 {{end}}

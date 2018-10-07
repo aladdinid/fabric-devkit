@@ -52,6 +52,7 @@ func fixtureVerifyCryptoYAMLFormatting(t *testing.T) {
 func TestGenerateConfigtxSpec(t *testing.T) {
 
 	data := config.NetworkSpec{}
+	data.ChaincodePath = "$GOPATH"
 	data.NetworkPath = "."
 	data.Domain = "fabric.network"
 	data.OrganisationSpecs = []config.OrgSpec{
