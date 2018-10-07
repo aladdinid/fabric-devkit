@@ -54,7 +54,7 @@ Org1:
   name: Org1
   id: Org1MSP
   anchor: peer0
-	
+
 Org2:
   name: Org2
   id: Org2MSP
