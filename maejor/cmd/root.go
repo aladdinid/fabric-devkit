@@ -49,21 +49,13 @@ var rootCmd = &cobra.Command{
 	Short: "maejor is a cli for Aladdin's Fabric Developer Kit",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(description)
-		createNetworkPath()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(imageCmd)
 	cobra.OnInitialize(initConfig)
-}
-
-func createNetworkPath() {
-
-	networkPath := config.NetworkPath()
-	if err := os.MkdirAll(networkPath, os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
+	rootCmd.AddCommand(configtxCmd)
+	rootCmd.AddCommand(imageCmd)
 }
 
 func initConfig() {
@@ -87,6 +79,23 @@ func initConfig() {
 // Execute cobra chain of commands
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Helper functions intended for used by all under the package cmd
+
+func createNetworkPath() {
+
+	networkPath := config.NetworkPath()
+	if err := os.MkdirAll(networkPath, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func createChannelArtefactPath() {
+	channelArtefactPath := config.ChannelArtefactPath()
+	if err := os.MkdirAll(channelArtefactPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 }
