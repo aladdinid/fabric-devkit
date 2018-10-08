@@ -21,10 +21,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/aladdinid/fabric-devkit/internal/configtx"
-	"github.com/aladdinid/fabric-devkit/internal/crypto"
-	"github.com/aladdinid/fabric-devkit/internal/network"
-
 	"github.com/aladdinid/fabric-devkit/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -54,17 +50,6 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(description)
 		createNetworkPath()
-		if err := configtx.GenerateConfigtxSpec(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
-
-		if err := crypto.GenerateCryptoSpec(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
-
-		if err := network.GenerateNetworkSpec(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
 	},
 }
 
