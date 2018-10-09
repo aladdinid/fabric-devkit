@@ -26,11 +26,8 @@ Under development in master branch. Features to be determined.
 
 | Item | Description |
 | --- | --- |
-| chaincodes/ | This folder contains chaincodes |
-| chaincodes/minimalcc | This folder is the container for a default version of a chaincode for illustration purposes only |
-| consortium | This folder contains definitions of and scripts to orchestrate Fabric network |
-| consortium/twoorgs | This is a default two organisations fabric network intended for illustration purposes only |
-| maejor | source code for the dev kit cli tool |
+| maejor | contains cli code |
+
 
 ## Contributions and feedback
 
