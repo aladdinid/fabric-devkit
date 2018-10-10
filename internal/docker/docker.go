@@ -22,8 +22,12 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
+	"github.com/docker/docker/pkg/stdcopy"
 )
 
 var cli *client.Client
@@ -100,6 +104,11 @@ func TagImageAsLatest(source string) string {
 
 	result := strings.Split(source, ":")
 	result[1] = "latest"
+
+	if err := TagImage(source, strings.Join(result, ":")); err != nil {
+		log.Fatal(err)
+	}
+
 	return strings.Join(result, ":")
 
 }
@@ -171,5 +180,61 @@ func DeleteImages(images []string) error {
 			}
 		}
 	}
+	return nil
+}
+
+// RunCryptoConfigContainer run a container
+func RunCryptoConfigContainer(hostVol, containerVol, image string, cmd []string) error {
+
+	resp, err := cli.ContainerCreate(ctx,
+		&container.Config{
+			Image: image,
+			Env: []string{
+				"GOPATH=/opt/gopath",
+				"FABRIC_CFG_PATH=/opt/gopath/src/github.com/hyperledger/fabric",
+			},
+			WorkingDir: "/opt/gopath/src/github.com/hyperledger/fabric",
+			Cmd:        cmd,
+		},
+		&container.HostConfig{
+			Mounts: []mount.Mount{
+				{
+					Type:   mount.TypeBind,
+					Source: hostVol,
+					Target: containerVol,
+				},
+			},
+		},
+		&network.NetworkingConfig{},
+		"cryptoconfig",
+	)
+	if err != nil {
+		return err
+	}
+
+	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		return err
+	}
+
+	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
+	select {
+	case err := <-errCh:
+		if err != nil {
+			return err
+		}
+	case <-statusCh:
+	}
+
+	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+	if err != nil {
+		return err
+	}
+
+	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+
+	if err := cli.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{Force: true}); err != nil {
+		return err
+	}
+
 	return nil
 }

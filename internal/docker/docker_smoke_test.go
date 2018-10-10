@@ -136,3 +136,45 @@ func TestTagImagesAsLatest(t *testing.T) {
 	}
 
 }
+
+func fixtureLocation(t *testing.T) string {
+
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Error: %v", err)
+	}
+
+	return pwd
+
+}
+
+func fixturePullFabricTools(t *testing.T) {
+	reader, err := docker.PullImage("hyperledger/fabric-tools:x86_64-1.1.0")
+	if err != nil {
+		t.Fatal("Unable to pull fabric-tools:x86_64-1.1.0")
+	}
+
+	io.Copy(os.Stdout, reader)
+
+}
+
+func fixtureTagFabricTools(t *testing.T) {
+	latest := docker.TagImageAsLatest("hyperledger/fabric-tools:x86_64-1.1.0")
+	if strings.Compare(latest, "hyperledger/fabric-tools:latest") != 0 {
+		t.Fatalf("Expected: hyperledger/fabric-tools:latest Got: %s", latest)
+	}
+}
+
+func TestRunCryptoConfigContainer(t *testing.T) {
+	fixturePullFabricTools(t)
+	fixtureTagFabricTools(t)
+	err := docker.RunCryptoConfigContainer(fixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "cryptogen"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = docker.RunCryptoConfigContainer(fixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "configtxgen"})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
