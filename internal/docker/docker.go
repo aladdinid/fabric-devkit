@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/docker/docker/api/types"
@@ -36,7 +37,8 @@ func init() {
 	cli = c
 }
 
-func pullImage(name string) (io.ReadCloser, error) {
+// PullImage initate a pull from Dockerhub
+func PullImage(name string) (io.ReadCloser, error) {
 
 	if cli == nil {
 		return nil, fmt.Errorf("session not started")
@@ -50,7 +52,21 @@ func pullImage(name string) (io.ReadCloser, error) {
 	return reader, nil
 }
 
-func tagImage(source string, target string) error {
+// PullImages pull multiple images
+func PullImages(names []string) {
+
+	for _, name := range names {
+		reader, err := PullImage(name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		io.Copy(os.Stdout, reader)
+		reader.Close()
+	}
+}
+
+// TagImage downloaded images
+func TagImage(source string, target string) error {
 
 	if cli == nil {
 		return fmt.Errorf("session not started")
@@ -64,7 +80,23 @@ func tagImage(source string, target string) error {
 	return nil
 }
 
-func tagImageAsLatest(source string) string {
+// TagImages multiple sources and targets
+func TagImages(sources []string, targets []string) {
+
+	if len(sources) != len(targets) {
+		log.Fatal(fmt.Errorf("sources and targets did not match"))
+	}
+
+	for index, source := range sources {
+		err := TagImage(source, targets[index])
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+// TagImageAsLatest tag a specific image as latest
+func TagImageAsLatest(source string) string {
 
 	result := strings.Split(source, ":")
 	result[1] = "latest"
@@ -72,18 +104,20 @@ func tagImageAsLatest(source string) string {
 
 }
 
-func tagImagesAsLatest(sources []string) []string {
+// TagImagesAsLatest tag a list of images as latest
+func TagImagesAsLatest(sources []string) []string {
 
 	var result []string
 	for _, source := range sources {
-		replacement := tagImageAsLatest(source)
+		replacement := TagImageAsLatest(source)
 		result = append(result, replacement)
 	}
 
 	return result
 }
 
-func searchImages(source string) ([]string, error) {
+// SearchImages search for images by name
+func SearchImages(source string) ([]string, error) {
 
 	if cli == nil {
 		return nil, fmt.Errorf("session not started")
@@ -104,7 +138,8 @@ func searchImages(source string) ([]string, error) {
 	return ids, nil
 }
 
-func removeImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
+// RemoveImage by image id
+func RemoveImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
 
 	if cli == nil {
 		return []types.ImageDeleteResponseItem{}, fmt.Errorf("session not started")
@@ -118,4 +153,23 @@ func removeImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
 	}
 
 	return deletes, nil
+}
+
+// DeleteImages remove downloaded images
+func DeleteImages(images []string) error {
+	for _, image := range images {
+		ids, err := SearchImages(image)
+		if err != nil {
+			return err
+		}
+
+		for _, id := range ids {
+			result, err := RemoveImage(id)
+			log.Printf("Images removed %v", result)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

@@ -1,3 +1,5 @@
+// +build smoke
+
 /*
 Copyright 2018 Aladdin Blockchain Technologies Ltd
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,8 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// +build smoke
-
 package docker_test
 
 import (
@@ -21,16 +21,18 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/aladdinid/fabric-devkit/internal/docker"
 )
 
 func TestPullImage(t *testing.T) {
 
-	_, err := pullImage("unbuntu")
+	_, err := docker.PullImage("unbuntu")
 	if err == nil {
 		t.Fatalf("Expect: error Got: no error")
 	}
 
-	_, err = pullImage("ubuntu")
+	_, err = docker.PullImage("ubuntu")
 	if err != nil {
 		t.Fatalf("Expected: no error Got: %v", err)
 	}
@@ -39,14 +41,14 @@ func TestPullImage(t *testing.T) {
 
 func fixturesForSearchImageTest(t *testing.T) {
 
-	reader, err := pullImage("alpine:latest")
+	reader, err := docker.PullImage("alpine:latest")
 	if err != nil {
 		t.Fatal("Unable to pull alpine:latest")
 	}
 
 	io.Copy(os.Stdout, reader)
 
-	reader, err = pullImage("alpine:3.7")
+	reader, err = docker.PullImage("alpine:3.7")
 	if err != nil {
 		t.Fatal("Unable to pull alpine:3.7")
 	}
@@ -58,7 +60,7 @@ func TestSearchImages(t *testing.T) {
 
 	fixturesForSearchImageTest(t)
 
-	result, err := searchImages("alpine:*")
+	result, err := docker.SearchImages("alpine:*")
 	if err != nil {
 		t.Fatalf("Expected: no error Got: %v", err)
 	}
@@ -71,14 +73,14 @@ func TestSearchImages(t *testing.T) {
 
 func fixturesForRemoveImageTest(t *testing.T) []string {
 
-	reader, err := pullImage("alpine:3.5")
+	reader, err := docker.PullImage("alpine:3.5")
 	if err != nil {
 		t.Fatal("Unable to pull alpine:3.5")
 	}
 
 	io.Copy(os.Stdout, reader)
 
-	ids, err := searchImages("alpine:3.5")
+	ids, err := docker.SearchImages("alpine:3.5")
 	if err != nil {
 		t.Fatal("image is not found")
 	}
@@ -91,7 +93,7 @@ func TestRemoveImage(t *testing.T) {
 
 	ids := fixturesForRemoveImageTest(t)
 
-	deleted, err := removeImage(ids[0])
+	deleted, err := docker.RemoveImage(ids[0])
 	if err != nil {
 		t.Fatalf("Expected: no err Got: %v", err)
 	}
@@ -104,7 +106,7 @@ func TestRemoveImage(t *testing.T) {
 
 func TestTagImage(t *testing.T) {
 
-	err := tagImage("something", "something else")
+	err := docker.TagImage("something", "something else")
 	if err == nil {
 		t.Fatal("Expected: error Got: no error")
 	}
@@ -115,7 +117,7 @@ func TestTagImageAsLatest(t *testing.T) {
 
 	source := "something:1234"
 	expected := "something:latest"
-	result := tagImageAsLatest(source)
+	result := docker.TagImageAsLatest(source)
 
 	if strings.Compare(expected, result) != 0 {
 		t.Fatalf("Source: %s Expected: %s Got: %s", source, expected, result)
@@ -128,7 +130,7 @@ func TestTagImagesAsLatest(t *testing.T) {
 	source := []string{"something:1234", "else:1234"}
 	expected := []string{"something:latest", "else:latest"}
 
-	result := tagImagesAsLatest(source)
+	result := docker.TagImagesAsLatest(source)
 	if reflect.DeepEqual(expected, result) != true {
 		t.Fatalf("Source: %v Expected: %v Got: %v", source, expected, result)
 	}
