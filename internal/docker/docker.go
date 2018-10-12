@@ -57,26 +57,29 @@ func PullImage(name string) (io.ReadCloser, error) {
 }
 
 // PullImages pull multiple images
-func PullImages(names []string) {
+func PullImages(names []string) error {
 
 	for _, name := range names {
 		reader, err := PullImage(name)
 		if err != nil {
-			log.Fatal(err)
+			reader.Close()
+			return err
 		}
 		io.Copy(os.Stdout, reader)
 		reader.Close()
 	}
+
+	return nil
 }
 
 // TagImage downloaded images
-func TagImage(source string, target string) error {
+func TagImage(source string, target func(string) string) error {
 
 	if cli == nil {
 		return fmt.Errorf("session not started")
 	}
 
-	err := cli.ImageTag(ctx, source, target)
+	err := cli.ImageTag(ctx, source, target(source))
 	if err != nil {
 		return err
 	}
@@ -85,44 +88,26 @@ func TagImage(source string, target string) error {
 }
 
 // TagImages multiple sources and targets
-func TagImages(sources []string, targets []string) {
+func TagImages(sources []string, target func(string) string) error {
 
-	if len(sources) != len(targets) {
-		log.Fatal(fmt.Errorf("sources and targets did not match"))
-	}
-
-	for index, source := range sources {
-		err := TagImage(source, targets[index])
+	for _, source := range sources {
+		err := TagImage(source, target)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
+
+	return nil
 }
 
-// TagImageAsLatest tag a specific image as latest
-func TagImageAsLatest(source string) string {
+// TargetTagAsLatest ensure that source are tagged as latest
+func TargetTagAsLatest(source string) string {
 
 	result := strings.Split(source, ":")
-	result[1] = "latest"
-
-	if err := TagImage(source, strings.Join(result, ":")); err != nil {
-		log.Fatal(err)
+	if len(result) == 2 {
+		result[1] = "latest"
 	}
-
 	return strings.Join(result, ":")
-
-}
-
-// TagImagesAsLatest tag a list of images as latest
-func TagImagesAsLatest(sources []string) []string {
-
-	var result []string
-	for _, source := range sources {
-		replacement := TagImageAsLatest(source)
-		result = append(result, replacement)
-	}
-
-	return result
 }
 
 // SearchImages search for images by name

@@ -50,8 +50,12 @@ func init() {
 }
 
 func pullAndRetagImages(images []string) {
-	docker.PullImages(images)
-	docker.TagImagesAsLatest(images)
+	if err := docker.PullImages(images); err != nil {
+		log.Fatal(err)
+	}
+	if err := docker.TagImages(images, docker.TargetTagAsLatest); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func deleteImages(images []string) error {
