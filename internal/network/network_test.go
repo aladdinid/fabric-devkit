@@ -11,18 +11,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package network_test
+package network
 
 import (
 	"os"
 	"testing"
 
 	"github.com/aladdinid/fabric-devkit/internal/config"
-	"github.com/aladdinid/fabric-devkit/internal/network"
 	"github.com/spf13/viper"
 )
 
-func fixtureConfigtxYAMLExists(t *testing.T) func() {
+func tfixtureConfigtxYAMLExists(t *testing.T) func() {
 
 	t.Helper()
 
@@ -34,7 +33,7 @@ func fixtureConfigtxYAMLExists(t *testing.T) func() {
 
 }
 
-func fixtureVerifyCryptoYAMLFormatting(t *testing.T) {
+func tfixtureVerifyCryptoYAMLFormatting(t *testing.T) {
 
 	t.Helper()
 
@@ -75,8 +74,8 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 	data.ChannelName = "Test"
 	data.Consortium = "SampleConsortium"
 
-	network.GenerateNetworkSpec(data)
-	cleanup := fixtureConfigtxYAMLExists(t)
+	GenerateNetworkSpec(data)
+	cleanup := tfixtureConfigtxYAMLExists(t)
 	defer cleanup()
-	fixtureVerifyCryptoYAMLFormatting(t)
+	tfixtureVerifyCryptoYAMLFormatting(t)
 }

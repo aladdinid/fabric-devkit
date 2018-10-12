@@ -23,11 +23,11 @@ import (
 	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
-func fixtureCreateConfigFile(t *testing.T) func() {
+func tfixtureCreateConfigFile(t *testing.T) func() {
 
 	t.Helper()
 
-	fixture := filepath.Join(".", "testdata")
+	fixture := filepath.Join(".")
 	configFile := filepath.Join(fixture, config.ConfigFilename)
 	_, err := os.Create(configFile)
 	if err != nil {
@@ -36,11 +36,11 @@ func fixtureCreateConfigFile(t *testing.T) func() {
 	return func() { os.Remove(configFile) }
 }
 
-func fixtureConfigFileExist(t *testing.T) {
+func tfixtureConfigFileExist(t *testing.T) {
 
 	t.Helper()
 
-	configPath := filepath.Join(".", "testdata")
+	configPath := filepath.Join(".")
 	configFile := filepath.Join(configPath, config.ConfigFilename)
 
 	defer func() {
@@ -56,16 +56,16 @@ func fixtureConfigFileExist(t *testing.T) {
 }
 
 func TestCreateConfig(t *testing.T) {
-	configPath := filepath.Join(".", "testdata")
+	configPath := filepath.Join(".")
 	if err := config.Create(configPath, configPath); err != nil {
 		t.Fatal(err)
 	}
-	fixtureConfigFileExist(t)
+	tfixtureConfigFileExist(t)
 }
 
 func TestSearch(t *testing.T) {
 
-	fixture := filepath.Join(".", "testdata")
+	fixture := filepath.Join(".")
 
 	t.Run("NoConfig", func(t *testing.T) {
 		noConfigPath := filepath.Join(fixture, "..")
@@ -78,7 +78,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("ConfigExists", func(t *testing.T) {
-		removeConfigFunc := fixtureCreateConfigFile(t)
+		removeConfigFunc := tfixtureCreateConfigFile(t)
 		defer removeConfigFunc()
 		result := config.Search(fixture)
 		actual := len(result)

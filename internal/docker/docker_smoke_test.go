@@ -13,24 +13,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package docker_test
+package docker
 
 import (
 	"io"
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/aladdinid/fabric-devkit/internal/docker"
 )
 
-const helloWorldLinux = "hello-world:linux"
-const helloWorldLatest = "hello-world"
+const tfixtureHelloWorldLinux = "hello-world:linux"
+const tfixtureHelloWorldLatest = "hello-world"
 
 func TestBasicOperations(t *testing.T) {
 
 	t.Run("PullImage", func(t *testing.T) {
-		reader, err := docker.PullImage(helloWorldLinux)
+		reader, err := PullImage(tfixtureHelloWorldLinux)
 		if err != nil {
 			t.Fatalf("Error: %v", err)
 		}
@@ -39,17 +37,17 @@ func TestBasicOperations(t *testing.T) {
 	})
 
 	t.Run("PullImages", func(t *testing.T) {
-		if err := docker.PullImages([]string{helloWorldLatest}); err != nil {
+		if err := PullImages([]string{tfixtureHelloWorldLatest}); err != nil {
 			t.Fatalf("Expected no error. Got: %v", err)
 		}
 	})
 
 	t.Run("SearchImage", func(t *testing.T) {
-		if _, err := docker.SearchImages("hello-world:*"); err != nil {
+		if _, err := SearchImages("hello-world:*"); err != nil {
 			t.Fatalf("Expected: no error Got: %v", err)
 		}
 
-		result, err := docker.SearchImages("hello-world:*")
+		result, err := SearchImages("hello-world:*")
 		if err != nil {
 			t.Fatalf("Expected: no error Got: %v", err)
 		}
@@ -60,12 +58,12 @@ func TestBasicOperations(t *testing.T) {
 	})
 
 	t.Run("RemoveImage", func(t *testing.T) {
-		ids, err := docker.SearchImages("hello-world")
+		ids, err := SearchImages("hello-world")
 		if err != nil {
 			t.Fatal("image is not found")
 		}
 
-		deleted, err := docker.RemoveImage(ids[0])
+		deleted, err := RemoveImage(ids[0])
 		if err != nil {
 			t.Fatalf("Expected: no err Got: %v", err)
 		}
@@ -78,19 +76,19 @@ func TestBasicOperations(t *testing.T) {
 }
 
 func tfixtureRemoveImage(t *testing.T) {
-	ids, err := docker.SearchImages("hello-world")
+	ids, err := SearchImages("hello-world")
 	if err != nil {
 		t.Fatal("image is not found")
 	}
 
-	_, err = docker.RemoveImage(ids[0])
+	_, err = RemoveImage(ids[0])
 	if err != nil {
 		t.Fatalf("Error not expected. Got: %v", err)
 	}
 }
 
 func tfixturePullDummyImage(t *testing.T) {
-	reader, err := docker.PullImage(helloWorldLinux)
+	reader, err := PullImage(tfixtureHelloWorldLinux)
 	if err != nil {
 		t.Fatalf("Error %v", err)
 	}
@@ -111,7 +109,7 @@ func TestTaggingImages(t *testing.T) {
 	t.Run("TagImage", func(t *testing.T) {
 		tfixturePullDummyImage(t)
 
-		err := docker.TagImage(helloWorldLinux, docker.TargetTagAsLatest)
+		err := TagImage(tfixtureHelloWorldLinux, TargetTagAsLatest)
 		if err != nil {
 			t.Fatalf("Error not expected. Got: %v", err)
 		}
@@ -120,8 +118,8 @@ func TestTaggingImages(t *testing.T) {
 	t.Run("TagImages", func(t *testing.T) {
 
 		t.Helper()
-		sources := []string{helloWorldLinux, helloWorldLatest}
-		if err := docker.TagImages(sources, tfixtureTagTargetAsSomething); err != nil {
+		sources := []string{tfixtureHelloWorldLinux, tfixtureHelloWorldLatest}
+		if err := TagImages(sources, tfixtureTagTargetAsSomething); err != nil {
 			t.Fatalf("Expected no err. Got %v", err)
 		}
 
@@ -142,7 +140,7 @@ func tfixtureLocation(t *testing.T) string {
 }
 
 func tfixturePullFabricTools(t *testing.T) {
-	reader, err := docker.PullImage("hyperledger/fabric-tools:x86_64-1.1.0")
+	reader, err := PullImage("hyperledger/fabric-tools:x86_64-1.1.0")
 	if err != nil {
 		t.Fatal("Unable to pull fabric-tools:x86_64-1.1.0")
 	}
@@ -152,7 +150,7 @@ func tfixturePullFabricTools(t *testing.T) {
 }
 
 func tfixtureTagFabricTools(t *testing.T) {
-	err := docker.TagImage("hyperledger/fabric-tools:x86_64-1.1.0", docker.TargetTagAsLatest)
+	err := TagImage("hyperledger/fabric-tools:x86_64-1.1.0", TargetTagAsLatest)
 	if err != nil {
 		t.Fatalf("Expected no error. Got %v", err)
 	}
@@ -161,12 +159,12 @@ func tfixtureTagFabricTools(t *testing.T) {
 func TestRunCryptoConfigContainer(t *testing.T) {
 	tfixturePullFabricTools(t)
 	tfixtureTagFabricTools(t)
-	err := docker.RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "cryptogen"})
+	err := RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "cryptogen"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = docker.RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "configtxgen"})
+	err = RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "configtxgen"})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package configtx_test
+package configtx
 
 import (
 	"os"
@@ -20,10 +20,9 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/aladdinid/fabric-devkit/internal/config"
-	"github.com/aladdinid/fabric-devkit/internal/configtx"
 )
 
-func fixtureConfigtxYAMLExists(t *testing.T) func() {
+func tfixtureConfigtxYAMLExists(t *testing.T) func() {
 
 	t.Helper()
 
@@ -35,7 +34,7 @@ func fixtureConfigtxYAMLExists(t *testing.T) func() {
 
 }
 
-func fixtureVerifyConfigtxYAMLFormatting(t *testing.T) {
+func tfixtureVerifyConfigtxYAMLFormatting(t *testing.T) {
 
 	t.Helper()
 
@@ -75,8 +74,8 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 	data.ChannelName = "Test"
 	data.Consortium = "SampleConsortium"
 
-	configtx.GenerateConfigtxSpec(data)
-	cleanup := fixtureConfigtxYAMLExists(t)
+	GenerateConfigtxSpec(data)
+	cleanup := tfixtureConfigtxYAMLExists(t)
 	defer cleanup()
-	fixtureVerifyConfigtxYAMLFormatting(t)
+	tfixtureVerifyConfigtxYAMLFormatting(t)
 }

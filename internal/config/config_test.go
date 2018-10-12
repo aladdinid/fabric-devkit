@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package config_test
+package config
 
 import (
 	"bytes"
@@ -21,8 +21,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 func TestMain(m *testing.M) {
@@ -35,7 +33,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error: Unable to get pwd. Got: %v", err)
 	}
 
-	if err := config.ConfigTemplate.Execute(w, struct {
+	if err := ConfigTemplate.Execute(w, struct {
 		ProjectPath string
 	}{
 		testPath,
@@ -43,7 +41,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error: unable to generate config writer. Got: %v", err)
 	}
 
-	err = config.InitializeByReader(b.Bytes())
+	err = InitializeByReader(b.Bytes())
 	if err != nil {
 		log.Fatalf("Unable to configure config object: %v", err)
 	}
@@ -56,7 +54,7 @@ func TestMain(m *testing.M) {
 
 func TestProjectPath(t *testing.T) {
 	expected := "fabric-devkit/internal/config"
-	actual := config.ProjectPath()
+	actual := ProjectPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -64,7 +62,7 @@ func TestProjectPath(t *testing.T) {
 
 func TestNetworkPath(t *testing.T) {
 	expected := "fabric-devkit/internal/config/network"
-	actual := config.NetworkPath()
+	actual := NetworkPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -72,7 +70,7 @@ func TestNetworkPath(t *testing.T) {
 
 func TestCryptoPath(t *testing.T) {
 	expected := "fabric-devkit/internal/config/network/crypto-config"
-	actual := config.CryptoPath()
+	actual := CryptoPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -80,7 +78,7 @@ func TestCryptoPath(t *testing.T) {
 
 func TestChannelArtefactPath(t *testing.T) {
 	expected := "fabric-devkit/internal/config/network/channel-artefacts"
-	actual := config.ChannelArtefactPath()
+	actual := ChannelArtefactPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -88,7 +86,7 @@ func TestChannelArtefactPath(t *testing.T) {
 
 func TestScriptPath(t *testing.T) {
 	expected := "fabric-devkit/internal/config/network/scripts"
-	actual := config.ScriptPath()
+	actual := ScriptPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -96,7 +94,7 @@ func TestScriptPath(t *testing.T) {
 
 func TestChaincodePath(t *testing.T) {
 	expected := "src/github.com/aladdinid/chaincodes"
-	actual := config.ChaincodePath()
+	actual := ChaincodePath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
@@ -104,7 +102,7 @@ func TestChaincodePath(t *testing.T) {
 
 func TestHyperledgerImages(t *testing.T) {
 	expected := 6
-	result := config.HyperledgerImages()
+	result := HyperledgerImages()
 	actual := len(result)
 	if expected != actual {
 		t.Fatalf("Expected: %d images Got: %d images", expected, actual)
@@ -113,7 +111,7 @@ func TestHyperledgerImages(t *testing.T) {
 
 func TestDomain(t *testing.T) {
 	expected := "fabric.network"
-	actual := config.Domain()
+	actual := Domain()
 	if strings.Compare(expected, actual) != 0 {
 		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
 	}
@@ -121,7 +119,7 @@ func TestDomain(t *testing.T) {
 
 func TestChannelName(t *testing.T) {
 	expected := "TwoOrg"
-	actual := config.ChannelName()
+	actual := ChannelName()
 	if strings.Compare(expected, actual) != 0 {
 		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
 	}
@@ -129,7 +127,7 @@ func TestChannelName(t *testing.T) {
 
 func TestConsortium(t *testing.T) {
 	expected := "SampleConsortium"
-	actual := config.Consortium()
+	actual := Consortium()
 	if strings.Compare(expected, actual) != 0 {
 		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
 	}
@@ -138,8 +136,8 @@ func TestConsortium(t *testing.T) {
 func TestOrgByName(t *testing.T) {
 
 	t.Run("OrgNotFound", func(t *testing.T) {
-		actual := config.OrgByName("O1")
-		expected := config.OrgSpec{}
+		actual := OrgByName("O1")
+		expected := OrgSpec{}
 
 		if !reflect.DeepEqual(expected, actual) {
 			t.Fatalf("Expected: %v Got: %v", expected, actual)
@@ -147,7 +145,7 @@ func TestOrgByName(t *testing.T) {
 	})
 
 	t.Run("VerifyType", func(t *testing.T) {
-		org := config.OrgByName("Org1")
+		org := OrgByName("Org1")
 		value := reflect.ValueOf(&org).Elem()
 
 		expected := 3
@@ -159,8 +157,8 @@ func TestOrgByName(t *testing.T) {
 	})
 
 	t.Run("OrgFound", func(t *testing.T) {
-		actual := config.OrgByName("Org1")
-		expected := config.OrgSpec{
+		actual := OrgByName("Org1")
+		expected := OrgSpec{
 			Name:   "Org1",
 			ID:     "Org1MSP",
 			Anchor: "peer0",
@@ -176,8 +174,8 @@ func TestOrgByName(t *testing.T) {
 func TestOrganizationSpecs(t *testing.T) {
 
 	t.Run("FailingNotEqual", func(t *testing.T) {
-		expected := []config.OrgSpec{}
-		actual := config.OrganizationSpecs()
+		expected := []OrgSpec{}
+		actual := OrganizationSpecs()
 
 		if reflect.DeepEqual(expected, actual) {
 			t.Fatalf("Expected: %v Got: %v", expected, actual)
@@ -185,19 +183,19 @@ func TestOrganizationSpecs(t *testing.T) {
 	})
 
 	t.Run("FoundEqual", func(t *testing.T) {
-		expected := []config.OrgSpec{
-			config.OrgSpec{
+		expected := []OrgSpec{
+			OrgSpec{
 				Name:   "Org1",
 				ID:     "Org1MSP",
 				Anchor: "peer0",
 			},
-			config.OrgSpec{
+			OrgSpec{
 				Name:   "Org2",
 				ID:     "Org2MSP",
 				Anchor: "peer0",
 			},
 		}
-		actual := config.OrganizationSpecs()
+		actual := OrganizationSpecs()
 
 		if !reflect.DeepEqual(expected, actual) {
 			t.Fatalf("Expected: %v Got: %v", expected, actual)
@@ -208,7 +206,7 @@ func TestOrganizationSpecs(t *testing.T) {
 
 func TestNewNetworkSpec(t *testing.T) {
 
-	spec := config.NewNetworkSpec()
+	spec := NewNetworkSpec()
 	value := reflect.ValueOf(*spec)
 
 	expected := value.NumField()
