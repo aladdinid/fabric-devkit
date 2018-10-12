@@ -14,6 +14,8 @@ limitations under the License.
 package config_test
 
 import (
+	"bytes"
+	"io"
 	"log"
 	"os"
 	"reflect"
@@ -25,7 +27,23 @@ import (
 
 func TestMain(m *testing.M) {
 
-	err := config.Initialize("./testdata", "config")
+	var b bytes.Buffer
+	w := io.Writer(&b)
+
+	testPath, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Error: Unable to get pwd. Got: %v", err)
+	}
+
+	if err := config.ConfigTemplate.Execute(w, struct {
+		ProjectPath string
+	}{
+		testPath,
+	}); err != nil {
+		log.Fatalf("Error: unable to generate config writer. Got: %v", err)
+	}
+
+	err = config.InitializeByReader(b.Bytes())
 	if err != nil {
 		log.Fatalf("Unable to configure config object: %v", err)
 	}
@@ -37,50 +55,50 @@ func TestMain(m *testing.M) {
 }
 
 func TestProjectPath(t *testing.T) {
-	expected := "<path to project>/fabric-devkit"
+	expected := "fabric-devkit/internal/config"
 	actual := config.ProjectPath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
 func TestNetworkPath(t *testing.T) {
-	expected := "<path to project>/fabric-devkit/network"
+	expected := "fabric-devkit/internal/config/network"
 	actual := config.NetworkPath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
 func TestCryptoPath(t *testing.T) {
-	expected := "<path to project>/fabric-devkit/network/crypto-config"
+	expected := "fabric-devkit/internal/config/network/crypto-config"
 	actual := config.CryptoPath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
 func TestChannelArtefactPath(t *testing.T) {
-	expected := "<path to project>/fabric-devkit/network/channel-artefacts"
+	expected := "fabric-devkit/internal/config/network/channel-artefacts"
 	actual := config.ChannelArtefactPath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
 func TestScriptPath(t *testing.T) {
-	expected := "<path to project>/fabric-devkit/network/scripts"
+	expected := "fabric-devkit/internal/config/network/scripts"
 	actual := config.ScriptPath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
 func TestChaincodePath(t *testing.T) {
-	expected := "$GOPATH/<path to chaincode>"
+	expected := "src/github.com/aladdinid/chaincodes"
 	actual := config.ChaincodePath()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+	if !strings.Contains(actual, expected) {
+		t.Fatalf("Expected: substring %s in %s", expected, actual)
 	}
 }
 
@@ -190,33 +208,14 @@ func TestOrganizationSpecs(t *testing.T) {
 
 func TestNewNetworkSpec(t *testing.T) {
 
-	actual := config.NewNetworkSpec()
+	spec := config.NewNetworkSpec()
+	value := reflect.ValueOf(*spec)
 
-	expected := config.NetworkSpec{
-		NetworkPath:         "<path to project>/fabric-devkit/network",
-		CryptoPath:          "<path to project>/fabric-devkit/network/crypto-config",
-		ChannelArtefactPath: "<path to project>/fabric-devkit/network/channel-artefacts",
-		ScriptPath:          "<path to project>/fabric-devkit/network/scripts",
-		ChaincodePath:       "$GOPATH/<path to chaincode>",
-		ChannelName:         "TwoOrg",
-		Consortium:          "SampleConsortium",
-		Domain:              "fabric.network",
-		OrganisationSpecs: []config.OrgSpec{
-			config.OrgSpec{
-				Name:   "Org1",
-				ID:     "Org1MSP",
-				Anchor: "peer0",
-			},
-			config.OrgSpec{
-				Name:   "Org2",
-				ID:     "Org2MSP",
-				Anchor: "peer0",
-			},
-		},
-	}
+	expected := value.NumField()
+	actual := 9
 
-	if !reflect.DeepEqual(expected, *actual) {
-		t.Fatalf("Expected: %v Got: %v", expected, *actual)
+	if expected != actual {
+		t.Fatalf("Expected number of fields %d but actual %d", expected, actual)
 	}
 
 }

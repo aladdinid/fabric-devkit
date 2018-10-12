@@ -14,6 +14,7 @@ limitations under the License.
 package config
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"strings"
@@ -25,10 +26,8 @@ import (
 // ConfigName name of the config file name without extension
 const ConfigName = ".maejor"
 
-// ConfigFilename is the default name for the configuration file
-var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
-
-var configTemplate = template.Must(template.New(".maejor.yaml").Parse(`ProjectPath: {{.ProjectPath}}
+const configTemplateText = `---
+ProjectPath: {{.ProjectPath}}
 NetworkPath: {{.ProjectPath}}/network
 CryptoPath: {{.ProjectPath}}/network/crypto-config
 ChannelArtefactPath: {{.ProjectPath}}/network/channel-artefacts
@@ -47,7 +46,7 @@ containers:
 network:
    domain: "fabric.network"
    channelName: "TwoOrg"
-   consortium: "SampleConsortum"
+   consortium: "SampleConsortium"
    organizations:
        - Org1
        - Org2
@@ -61,7 +60,13 @@ Org2:
   name: Org2
   id: Org2MSP
   anchor: peer0
-`))
+`
+
+// ConfigFilename is the default name for the configuration file
+var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
+
+// ConfigTemplate contain template engines
+var ConfigTemplate = template.Must(template.New(".maejor.yaml").Parse(configTemplateText))
 
 // Create create configuration file ".maejor.yaml" in
 // specified location is one does not exists
@@ -73,7 +78,7 @@ func Create(configPath string, projectPath string) error {
 			return err
 		}
 
-		err = configTemplate.Execute(f, struct {
+		err = ConfigTemplate.Execute(f, struct {
 			ProjectPath string
 		}{
 			projectPath,
@@ -102,6 +107,15 @@ func Search(rootPath string) []string {
 	}
 
 	return result
+}
+
+// InitializeByReader captures bytes
+func InitializeByReader(yaml []byte) error {
+	viper.SetConfigType("yaml")
+	if err := viper.ReadConfig(bytes.NewBuffer(yaml)); err != nil {
+		return err
+	}
+	return nil
 }
 
 // Initialize viper framework
