@@ -46,7 +46,7 @@ Organizations:
       # MSPDir is the filesystem path which contains the MSP configuration
       MSPDir: crypto-config/ordererOrganizations/{{.Domain}}/msp
 
-{{range $index, $org := .OrganisationSpecs}}
+{{range $index, $org := .OrganizationSpecs}}
     - &{{$org.Name}}
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
@@ -185,7 +185,8 @@ Orderer: &OrdererDefaults
 ################################################################################
 Profiles:
 
-    {{.ChannelName}}OrdererGenesis:
+{{- range $index, $consortium := .ConsortiumSpecs}}
+    {{$consortium.ChannelName}}OrdererGenesis:
         Capabilities:
             <<: *ChannelCapabilities
         Orderer:
@@ -195,22 +196,23 @@ Profiles:
             Capabilities:
                 <<: *OrdererCapabilities
         Consortiums:
-            {{.Consortium}}:
+            {{$consortium.Name}}:
                 Organizations:
-                {{- range $index, $org := .OrganisationSpecs}} 
-                  - *{{$org.Name}}
+                {{- range $index, $org := $consortium.Organizations}} 
+                  - *{{$org}}
                 {{- end}}
 
-    {{.ChannelName}}Channel:
-        Consortium: {{.Consortium}}
+    {{$consortium.ChannelName}}Channel:
+        Consortium: {{$consortium.Name}}
         Application:
             <<: *ApplicationDefaults
             Organizations:
-			{{- range $index, $org := .OrganisationSpecs}}
-                - *{{$org.Name}}
+			{{- range $index, $org := $consortium.Organizations}}
+                - *{{$org}}
             {{- end}} 
             Capabilities:
                 <<: *ApplicationCapabilities
+{{- end}}
 `
 
 // GenerateConfigtxSpec generate configtx spec

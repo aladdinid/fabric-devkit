@@ -1,3 +1,5 @@
+// +build unit
+
 /*
 Copyright 2018 Aladdin Blockchain Technologies Ltd
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,26 +119,66 @@ func TestDomain(t *testing.T) {
 	}
 }
 
-func TestChannelName(t *testing.T) {
-	expected := "TwoOrg"
-	actual := ChannelName()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
-	}
+func TestConsortiumByName(t *testing.T) {
+
+	t.Run("ConsortiumNotFound", func(t *testing.T) {
+		actual := consortiumByName("1")
+		expected := ConsortiumSpec{}
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+
+	})
+
+	t.Run("VerifyType", func(t *testing.T) {
+		consortium := consortiumByName("SampleConsortium")
+		value := reflect.ValueOf(&consortium).Elem()
+
+		expected := 3
+		actual := value.NumField()
+		if expected != actual {
+			t.Fatalf("Expected: %d fields Got: %d", expected, actual)
+		}
+	})
+
+	t.Run("ConsortiumFound", func(t *testing.T) {
+		actual := consortiumByName("SampleConsortium")
+		expected := ConsortiumSpec{
+			Name:          "SampleConsortium",
+			ChannelName:   "TwoOrg",
+			Organizations: []string{"Org1", "Org2"},
+		}
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v Got: %v", expected, actual)
+		}
+
+	})
+
 }
 
-func TestConsortium(t *testing.T) {
-	expected := "SampleConsortium"
-	actual := Consortium()
-	if strings.Compare(expected, actual) != 0 {
-		t.Fatalf("Expected: string value %s Got: %s", expected, actual)
+func TestConsortiumSpecs(t *testing.T) {
+
+	expected := []ConsortiumSpec{
+		{
+			Name:          "SampleConsortium",
+			ChannelName:   "TwoOrg",
+			Organizations: []string{"Org1", "Org2"},
+		},
 	}
+	actual := ConsortiumSpecs()
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("Expected: %v Got: %v", expected, actual)
+	}
+
 }
 
 func TestOrgByName(t *testing.T) {
 
 	t.Run("OrgNotFound", func(t *testing.T) {
-		actual := OrgByName("O1")
+		actual := orgByName("O1")
 		expected := OrgSpec{}
 
 		if !reflect.DeepEqual(expected, actual) {
@@ -145,7 +187,7 @@ func TestOrgByName(t *testing.T) {
 	})
 
 	t.Run("VerifyType", func(t *testing.T) {
-		org := OrgByName("Org1")
+		org := orgByName("Org1")
 		value := reflect.ValueOf(&org).Elem()
 
 		expected := 3
@@ -157,7 +199,7 @@ func TestOrgByName(t *testing.T) {
 	})
 
 	t.Run("OrgFound", func(t *testing.T) {
-		actual := OrgByName("Org1")
+		actual := orgByName("Org1")
 		expected := OrgSpec{
 			Name:   "Org1",
 			ID:     "Org1MSP",
@@ -173,35 +215,24 @@ func TestOrgByName(t *testing.T) {
 
 func TestOrganizationSpecs(t *testing.T) {
 
-	t.Run("FailingNotEqual", func(t *testing.T) {
-		expected := []OrgSpec{}
-		actual := OrganizationSpecs()
+	expected := []OrgSpec{
+		OrgSpec{
+			Name:   "Org1",
+			ID:     "Org1MSP",
+			Anchor: "peer0",
+		},
+		OrgSpec{
+			Name:   "Org2",
+			ID:     "Org2MSP",
+			Anchor: "peer0",
+		},
+	}
+	actual := OrganizationSpecs()
 
-		if reflect.DeepEqual(expected, actual) {
-			t.Fatalf("Expected: %v Got: %v", expected, actual)
-		}
-	})
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("Expected: %v Got: %v", expected, actual)
+	}
 
-	t.Run("FoundEqual", func(t *testing.T) {
-		expected := []OrgSpec{
-			OrgSpec{
-				Name:   "Org1",
-				ID:     "Org1MSP",
-				Anchor: "peer0",
-			},
-			OrgSpec{
-				Name:   "Org2",
-				ID:     "Org2MSP",
-				Anchor: "peer0",
-			},
-		}
-		actual := OrganizationSpecs()
-
-		if !reflect.DeepEqual(expected, actual) {
-			t.Fatalf("Expected: %v Got: %v", expected, actual)
-		}
-
-	})
 }
 
 func TestNewNetworkSpec(t *testing.T) {
@@ -209,8 +240,8 @@ func TestNewNetworkSpec(t *testing.T) {
 	spec := NewNetworkSpec()
 	value := reflect.ValueOf(*spec)
 
-	expected := value.NumField()
-	actual := 9
+	expected := 8
+	actual := value.NumField()
 
 	if expected != actual {
 		t.Fatalf("Expected number of fields %d but actual %d", expected, actual)

@@ -26,7 +26,7 @@ import (
 // ConfigName name of the config file name without extension
 const ConfigName = ".maejor"
 
-const configTemplateText = `---
+const configTemplateText = `
 ProjectPath: {{.ProjectPath}}
 NetworkPath: {{.ProjectPath}}/network
 CryptoPath: {{.ProjectPath}}/network/crypto-config
@@ -35,21 +35,28 @@ ScriptPath: {{.ProjectPath}}/network/scripts
 ChaincodePath: $GOPATH/src/github.com/aladdinid/chaincodes
 
 containers:
-   hyperledger:
-      - hyperledger/fabric-ca:x86_64-1.1.0
-      - hyperledger/fabric-peer:x86_64-1.1.0
-      - hyperledger/fabric-orderer:x86_64-1.1.0
-      - hyperledger/fabric-ccenv:x86_64-1.1.0
-      - hyperledger/fabric-tools:x86_64-1.1.0
-      - hyperledger/fabric-couchdb:x86_64-1.0.6
+  hyperledger:
+     - hyperledger/fabric-ca:x86_64-1.1.0
+     - hyperledger/fabric-peer:x86_64-1.1.0
+     - hyperledger/fabric-orderer:x86_64-1.1.0
+     - hyperledger/fabric-ccenv:x86_64-1.1.0
+     - hyperledger/fabric-tools:x86_64-1.1.0
+     - hyperledger/fabric-couchdb:x86_64-1.0.6
 
 network:
    domain: "fabric.network"
-   channelName: "TwoOrg"
-   consortium: "SampleConsortium"
+   consortiums: 
+     - SampleConsortium
    organizations:
-       - Org1
-       - Org2
+     - Org1
+     - Org2
+
+SampleConsortium:
+   name: "SampleConsortium"
+   channelname: "TwoOrg"
+   organizations:
+     - Org1
+     - Org2
 
 Org1:
   name: Org1
@@ -110,9 +117,9 @@ func Search(rootPath string) []string {
 }
 
 // InitializeByReader captures bytes
-func InitializeByReader(yaml []byte) error {
+func InitializeByReader(config []byte) error {
 	viper.SetConfigType("yaml")
-	if err := viper.ReadConfig(bytes.NewBuffer(yaml)); err != nil {
+	if err := viper.ReadConfig(bytes.NewBuffer(config)); err != nil {
 		return err
 	}
 	return nil
@@ -172,18 +179,53 @@ func Domain() string {
 	return viper.GetString("network.domain")
 }
 
-// ChannelName returns a default name
-func ChannelName() string {
-	return viper.GetString("network.channelName")
+func consortiumByName(name string) ConsortiumSpec {
+	value := viper.GetStringMap(name)
+
+	var spec = ConsortiumSpec{}
+
+	name, ok := value["name"].(string)
+	if ok {
+		spec.Name = name
+	}
+
+	channelName, ok := value["channelname"].(string)
+	if ok {
+		spec.ChannelName = channelName
+	}
+
+	iOrgs, ok := value["organizations"].([]interface{})
+	if ok {
+		var orgs []string
+		for _, iOrg := range iOrgs {
+			switch s := iOrg.(type) {
+			case string:
+				orgs = append(orgs, s)
+			}
+		}
+		spec.Organizations = orgs
+
+	}
+
+	return spec
 }
 
-// Consortium returns name of a consortium
-func Consortium() string {
-	return viper.GetString("network.consortium")
+// ConsortiumSpecs returns am array of consortium specs
+func ConsortiumSpecs() []ConsortiumSpec {
+
+	var consortiumSpecs = []ConsortiumSpec{}
+
+	consortiumNames := viper.GetStringSlice("network.consortiums")
+
+	for _, consortiumName := range consortiumNames {
+		consortiumSpec := consortiumByName(consortiumName)
+		consortiumSpecs = append(consortiumSpecs, consortiumSpec)
+	}
+
+	return consortiumSpecs
 }
 
-// OrgByName returns Org specification
-func OrgByName(name string) OrgSpec {
+func orgByName(name string) OrgSpec {
 	value := viper.GetStringMap(name)
 
 	var spec = OrgSpec{}
@@ -213,7 +255,7 @@ func OrganizationSpecs() []OrgSpec {
 
 	orgNames := viper.GetStringSlice("network.organizations")
 	for _, orgName := range orgNames {
-		orgSpec := OrgByName(orgName)
+		orgSpec := orgByName(orgName)
 		orgSpecs = append(orgSpecs, orgSpec)
 	}
 

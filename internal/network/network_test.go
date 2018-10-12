@@ -1,3 +1,5 @@
+// +build unit
+
 /*
 Copyright 2018 Aladdin Blockchain Technologies Ltd
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +56,7 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 	data.ChaincodePath = "$GOPATH"
 	data.NetworkPath = "."
 	data.Domain = "fabric.network"
-	data.OrganisationSpecs = []config.OrgSpec{
+	data.OrganizationSpecs = []config.OrgSpec{
 		config.OrgSpec{
 			Name:   "Org1",
 			ID:     "Org1MSP",
@@ -71,8 +73,13 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 			Anchor: "peer0",
 		},
 	}
-	data.ChannelName = "Test"
-	data.Consortium = "SampleConsortium"
+	data.ConsortiumSpecs = []config.ConsortiumSpec{
+		{
+			Name:          "SampleConsortium",
+			ChannelName:   "TwoOrg",
+			Organizations: []string{"Org1", "Org2"},
+		},
+	}
 
 	GenerateNetworkSpec(data)
 	cleanup := tfixtureConfigtxYAMLExists(t)

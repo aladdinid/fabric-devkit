@@ -13,11 +13,18 @@ limitations under the License.
 
 package config
 
-// OrgSpec represents specification of Fabric type
+// OrgSpec represents specification of an orgnizations
 type OrgSpec struct {
 	Name   string `json:"name"`
 	ID     string `json:"id"`
 	Anchor string `json:"anchor"`
+}
+
+// ConsortiumSpec represents the specification of a consortium
+type ConsortiumSpec struct {
+	Name          string `json:"name"`
+	ChannelName   string `json:"channelname"`
+	Organizations []string
 }
 
 // NetworkSpec represents specification of a Fabric network
@@ -28,9 +35,8 @@ type NetworkSpec struct {
 	CryptoPath          string `json:"cryptopath"`
 	ChannelArtefactPath string `json:"configtxpath"`
 	Domain              string `json:"domain"`
-	ChannelName         string `json:"channelname"`
-	Consortium          string `json:"consortium"`
-	OrganisationSpecs   []OrgSpec
+	ConsortiumSpecs     []ConsortiumSpec
+	OrganizationSpecs   []OrgSpec
 }
 
 // NewNetworkSpec instantiate a reference to a new spec
@@ -43,9 +49,8 @@ func NewNetworkSpec() *NetworkSpec {
 	spec.CryptoPath = CryptoPath()
 	spec.ChannelArtefactPath = ChannelArtefactPath()
 	spec.Domain = Domain()
-	spec.ChannelName = ChannelName()
-	spec.Consortium = Consortium()
-	spec.OrganisationSpecs = OrganizationSpecs()
+	spec.ConsortiumSpecs = ConsortiumSpecs()
+	spec.OrganizationSpecs = OrganizationSpecs()
 
 	return spec
 }
