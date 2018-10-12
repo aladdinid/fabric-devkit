@@ -55,13 +55,13 @@ services:
     volumes:
       - ./channel-artefacts/:/var/hyperledger/fabric/crypto-config/channel-artefacts/
       - ./crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/var/hyperledger/fabric/crypto-config/
-      {{- range $index, $org := .OrganisationSpecs }}
+      {{- range $index, $org := .OrganizationSpecs }}
       - ./crypto-config/peerOrganizations/{{$org.Name | ToLower}}.{{$domain}}/peers/{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/{{$org.Name | ToLower}}.{{$domain}}/tls/ca.crt
       {{- end}}
     ports:
       - 7050:7050
 
-{{range $index, $org := .OrganisationSpecs }}
+{{range $index, $org := .OrganizationSpecs }}
   # {{$org.Name}}
   ca.{{$org.Name | ToLower}}.{{$domain}}:
     container_name: ca.{{$org.Name | ToLower}}.{{$domain}}
