@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package docker
+package svc
 
 import (
 	"io"
@@ -159,12 +159,12 @@ func tfixtureTagFabricTools(t *testing.T) {
 func TestRunCryptoConfigContainer(t *testing.T) {
 	tfixturePullFabricTools(t)
 	tfixtureTagFabricTools(t)
-	err := RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "cryptogen"})
+	err := RunCryptoConfigContainer(tfixtureLocation(t), "container_1", "hyperledger/fabric-tools", []string{"which", "cryptogen"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = RunCryptoConfigContainer(tfixtureLocation(t), "/opt/gopath/src/github.com/hyperledger/fabric", "hyperledger/fabric-tools", []string{"which", "configtxgen"})
+	err = RunCryptoConfigContainer(tfixtureLocation(t), "container_2", "hyperledger/fabric-tools", []string{"which", "configtxgen"})
 	if err != nil {
 		t.Fatal(err)
 	}

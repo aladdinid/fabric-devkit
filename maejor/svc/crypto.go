@@ -11,18 +11,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package crypto
+package svc
 
 import (
 	"html/template"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
-const cryptoSpec = `
+const cryptoSpecTemplateText = `
 # ---------------------------------------------------------------------------
 # "OrdererOrgs" - Definition of organizations managing orderer nodes
 # ---------------------------------------------------------------------------
@@ -97,13 +96,13 @@ PeerOrgs:
 `
 
 // GenerateCryptoSpec generate crypto spec
-func GenerateCryptoSpec(spec config.NetworkSpec) error {
+func GenerateCryptoSpec(spec NetworkSpec) error {
 
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
 	}
 
-	tpl := template.Must(template.New("Main").Funcs(funcMap).Parse(cryptoSpec))
+	tpl := template.Must(template.New("Main").Funcs(funcMap).Parse(cryptoSpecTemplateText))
 	configtxYml := filepath.Join(spec.NetworkPath, "crypto-config.yaml")
 	f, err := os.Create(configtxYml)
 	if err != nil {
@@ -114,5 +113,32 @@ func GenerateCryptoSpec(spec config.NetworkSpec) error {
 		return err
 	}
 
+	return nil
+}
+
+const cryptoConfigExecScript = `#!/bin/bash
+cryptogen generate --config=./crypto-config.yaml --output="./crypto-config"
+`
+
+// GenerateCryptoExecScript produces crypto asset generator execution script
+func GenerateCryptoExecScript(spec NetworkSpec) error {
+
+	scriptBody := []byte(cryptoConfigExecScript)
+	generateCryptoExecSh := filepath.Join(spec.NetworkPath, "generateCryptoAsset.sh")
+	err := ioutil.WriteFile(generateCryptoExecSh, scriptBody, 0777)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GenerateCryptoAssests produces crypo assets and place it in location defined by network spec
+func GenerateCryptoAssests(spec NetworkSpec) error {
+
+	cmd := []string{"./generateCryptoAsset.sh"}
+	if err := RunCryptoConfigContainer(spec.NetworkPath, "cryptogen", "hyperledger/fabric-tools", cmd); err != nil {
+		return err
+	}
 	return nil
 }

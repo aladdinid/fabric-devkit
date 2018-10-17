@@ -13,14 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package config_test
+package svc
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 func tfixtureCreateConfigFile(t *testing.T) func() {
@@ -28,7 +26,7 @@ func tfixtureCreateConfigFile(t *testing.T) func() {
 	t.Helper()
 
 	fixture := filepath.Join(".")
-	configFile := filepath.Join(fixture, config.ConfigFilename)
+	configFile := filepath.Join(fixture, configFilename)
 	_, err := os.Create(configFile)
 	if err != nil {
 		t.Fatal(err)
@@ -41,7 +39,7 @@ func tfixtureConfigFileExist(t *testing.T) {
 	t.Helper()
 
 	configPath := filepath.Join(".")
-	configFile := filepath.Join(configPath, config.ConfigFilename)
+	configFile := filepath.Join(configPath, configFilename)
 
 	defer func() {
 		if err := os.Remove(configFile); err != nil {
@@ -57,7 +55,7 @@ func tfixtureConfigFileExist(t *testing.T) {
 
 func TestCreateConfig(t *testing.T) {
 	configPath := filepath.Join(".")
-	if err := config.Create(configPath, configPath); err != nil {
+	if err := Create(configPath, configPath); err != nil {
 		t.Fatal(err)
 	}
 	tfixtureConfigFileExist(t)
@@ -69,7 +67,7 @@ func TestSearch(t *testing.T) {
 
 	t.Run("NoConfig", func(t *testing.T) {
 		noConfigPath := filepath.Join(fixture, "..")
-		result := config.Search(noConfigPath)
+		result := Search(noConfigPath)
 		actual := len(result)
 		expected := 0
 		if expected != actual {
@@ -80,7 +78,7 @@ func TestSearch(t *testing.T) {
 	t.Run("ConfigExists", func(t *testing.T) {
 		removeConfigFunc := tfixtureCreateConfigFile(t)
 		defer removeConfigFunc()
-		result := config.Search(fixture)
+		result := Search(fixture)
 		actual := len(result)
 		expected := 1
 		if expected != actual {

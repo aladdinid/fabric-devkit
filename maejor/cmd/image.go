@@ -19,8 +19,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/aladdinid/fabric-devkit/internal/config"
-	"github.com/aladdinid/fabric-devkit/internal/docker"
+	"github.com/aladdinid/fabric-devkit/maejor/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +30,7 @@ var imageCmd = &cobra.Command{
 	Use:   "image",
 	Short: "Manage relevant docker images for the project",
 	Run: func(cmd *cobra.Command, args []string) {
-		hyperledger := config.HyperledgerImages()
+		hyperledger := svc.HyperledgerImages()
 		if imagesPulled {
 			pullAndRetagImages(hyperledger)
 		}
@@ -50,16 +49,16 @@ func init() {
 }
 
 func pullAndRetagImages(images []string) {
-	if err := docker.PullImages(images); err != nil {
+	if err := svc.PullImages(images); err != nil {
 		log.Fatal(err)
 	}
-	if err := docker.TagImages(images, docker.TargetTagAsLatest); err != nil {
+	if err := svc.TagImages(images, svc.TargetTagAsLatest); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func deleteImages(images []string) error {
-	err := docker.DeleteImages(images)
+	err := svc.DeleteImages(images)
 	if err != nil {
 		return err
 	}

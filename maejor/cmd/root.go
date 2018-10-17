@@ -21,7 +21,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/aladdinid/fabric-devkit/internal/config"
+	"github.com/aladdinid/fabric-devkit/maejor/svc"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +42,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.`
 
-var networkSpec *config.NetworkSpec
+var networkSpec *svc.NetworkSpec
 
 var rootCmd = &cobra.Command{
 	Use:   "maejor",
@@ -54,8 +54,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(defaultCmd)
-	rootCmd.AddCommand(configtxCmd)
+	rootCmd.AddCommand(specCmd)
 	rootCmd.AddCommand(imageCmd)
 }
 
@@ -66,15 +65,15 @@ func initConfig() {
 		log.Fatal(err)
 	}
 
-	if err := config.Create(pwd, pwd); err != nil {
+	if err := svc.Create(pwd, pwd); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := config.Initialize(pwd, config.ConfigName); err != nil {
+	if err := svc.Initialize(pwd, svc.ConfigName); err != nil {
 		log.Fatal(err)
 	}
 
-	networkSpec = config.NewNetworkSpec()
+	networkSpec = svc.NewNetworkSpec()
 }
 
 // Execute cobra chain of commands
@@ -84,18 +83,16 @@ func Execute() {
 	}
 }
 
-// Helper functions intended for used by all under the package cmd
-
 func createNetworkPath() {
 
-	networkPath := config.NetworkPath()
+	networkPath := svc.NetworkPath()
 	if err := os.MkdirAll(networkPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func createChannelArtefactPath() {
-	channelArtefactPath := config.ChannelArtefactPath()
+	channelArtefactPath := svc.ChannelArtefactPath()
 	if err := os.MkdirAll(channelArtefactPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}

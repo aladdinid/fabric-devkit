@@ -19,29 +19,36 @@ package cmd
 import (
 	"log"
 
-	"github.com/aladdinid/fabric-devkit/internal/config"
-	"github.com/aladdinid/fabric-devkit/internal/configtx"
-	"github.com/aladdinid/fabric-devkit/internal/crypto"
-	"github.com/aladdinid/fabric-devkit/internal/network"
+	"github.com/aladdinid/fabric-devkit/maejor/svc"
 	"github.com/spf13/cobra"
 )
 
-var defaultCmd = &cobra.Command{
-	Use:   "default",
-	Short: "Create a default network specification",
+var specCmd = &cobra.Command{
+	Use:   "specs",
+	Short: "Create artefacts",
 	Run: func(cmd *cobra.Command, args []string) {
-		hyperledger := config.HyperledgerImages()
-		pullAndRetagImages(hyperledger)
 		createNetworkPath()
 		createChannelArtefactPath()
-		if err := configtx.GenerateConfigtxSpec(*networkSpec); err != nil {
+		if err := svc.GenerateConfigtxSpec(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
-		if err := crypto.GenerateCryptoSpec(*networkSpec); err != nil {
+		if err := svc.GenerateConfigTxExecScript(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
-		if err := network.GenerateNetworkSpec(*networkSpec); err != nil {
+		if err := svc.GenerateCryptoSpec(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
+		if err := svc.GenerateCryptoExecScript(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := svc.GenerateCryptoAssests(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := svc.GenerateConfigTxAssets(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+
 	},
 }

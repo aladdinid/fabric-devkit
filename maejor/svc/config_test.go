@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package config
+package svc
 
 import (
 	"bytes"
@@ -55,7 +55,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestProjectPath(t *testing.T) {
-	expected := "fabric-devkit/internal/config"
+	expected := "fabric-devkit/maejor/svc"
 	actual := ProjectPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
@@ -63,7 +63,7 @@ func TestProjectPath(t *testing.T) {
 }
 
 func TestNetworkPath(t *testing.T) {
-	expected := "fabric-devkit/internal/config/network"
+	expected := "fabric-devkit/maejor/svc"
 	actual := NetworkPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
@@ -71,7 +71,7 @@ func TestNetworkPath(t *testing.T) {
 }
 
 func TestCryptoPath(t *testing.T) {
-	expected := "fabric-devkit/internal/config/network/crypto-config"
+	expected := "fabric-devkit/maejor/svc/network/crypto-config"
 	actual := CryptoPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
@@ -79,7 +79,7 @@ func TestCryptoPath(t *testing.T) {
 }
 
 func TestChannelArtefactPath(t *testing.T) {
-	expected := "fabric-devkit/internal/config/network/channel-artefacts"
+	expected := "fabric-devkit/maejor/svc/network/channel-artefacts"
 	actual := ChannelArtefactPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)
@@ -87,7 +87,7 @@ func TestChannelArtefactPath(t *testing.T) {
 }
 
 func TestScriptPath(t *testing.T) {
-	expected := "fabric-devkit/internal/config/network/scripts"
+	expected := "fabric-devkit/maejor/svc/network/scripts"
 	actual := ScriptPath()
 	if !strings.Contains(actual, expected) {
 		t.Fatalf("Expected: substring %s in %s", expected, actual)

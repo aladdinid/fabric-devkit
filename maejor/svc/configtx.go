@@ -11,18 +11,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package configtx
+package svc
 
 import (
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
-
-	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
-const configtxSpec = `{{- $domain := .Domain}}---
+const configtxSpecTemplateText = `{{- $domain := .Domain}}---
 ################################################################################
 #
 #   Section: Organizations
@@ -216,13 +214,13 @@ Profiles:
 `
 
 // GenerateConfigtxSpec generate configtx spec
-func GenerateConfigtxSpec(spec config.NetworkSpec) error {
+func GenerateConfigtxSpec(spec NetworkSpec) error {
 
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
 	}
 
-	tpl := template.Must(template.New("Main").Funcs(funcMap).Parse(configtxSpec))
+	tpl := template.Must(template.New("ConfigTxSpec").Funcs(funcMap).Parse(configtxSpecTemplateText))
 	configtxYml := filepath.Join(spec.NetworkPath, "configtx.yaml")
 	f, err := os.Create(configtxYml)
 	if err != nil {
@@ -233,5 +231,44 @@ func GenerateConfigtxSpec(spec config.NetworkSpec) error {
 		return err
 	}
 
+	return nil
+}
+
+const configtxExecSript = `#!/bin/bash
+
+{{- range $index, $consortium := .ConsortiumSpecs}}
+configtxgen -profile {{$consortium.ChannelName}}OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
+configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/channel.tx -channelID {{$consortium.ChannelName}}
+{{- end}}
+`
+
+// GenerateConfigTxExecScript produces bash scripts
+func GenerateConfigTxExecScript(spec NetworkSpec) error {
+
+	tpl := template.Must(template.New("ConfigTxExec").Parse(configtxExecSript))
+	generateConfigtxAssetSh := filepath.Join(spec.NetworkPath, "generateConfigtx.sh")
+	f, err := os.Create(generateConfigtxAssetSh)
+	if err != nil {
+		return err
+	}
+
+	err = os.Chmod(generateConfigtxAssetSh, 0777)
+	if err != nil {
+		return err
+	}
+
+	err = tpl.Execute(f, spec)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GenerateConfigTxAssets produces configtx assets
+func GenerateConfigTxAssets(spec NetworkSpec) error {
+	cmd := []string{"./generateConfigtx.sh"}
+	if err := RunCryptoConfigContainer(spec.NetworkPath, "configtx", "hyperledger/fabric-tools", cmd); err != nil {
+		return err
+	}
 	return nil
 }

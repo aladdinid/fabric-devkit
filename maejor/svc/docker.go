@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package docker
+package svc
 
 import (
 	"context"
@@ -169,7 +169,7 @@ func DeleteImages(images []string) error {
 }
 
 // RunCryptoConfigContainer run a container
-func RunCryptoConfigContainer(hostVol, containerVol, image string, cmd []string) error {
+func RunCryptoConfigContainer(hostVol, name, image string, cmd []string) error {
 
 	resp, err := cli.ContainerCreate(ctx,
 		&container.Config{
@@ -186,12 +186,12 @@ func RunCryptoConfigContainer(hostVol, containerVol, image string, cmd []string)
 				{
 					Type:   mount.TypeBind,
 					Source: hostVol,
-					Target: containerVol,
+					Target: "/opt/gopath/src/github.com/hyperledger/fabric",
 				},
 			},
 		},
 		&network.NetworkingConfig{},
-		"cryptoconfig",
+		name,
 	)
 	if err != nil {
 		return err

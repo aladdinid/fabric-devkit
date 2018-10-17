@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package network
+package svc
 
 import (
 	"os"
@@ -19,8 +19,6 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
-
-	"github.com/aladdinid/fabric-devkit/internal/config"
 )
 
 const networkSpec = `{{- $domain := .Domain}} {{- $chaincodepath := .ChaincodePath}}
@@ -160,7 +158,7 @@ services:
 `
 
 // GenerateNetworkSpec produces docker compose network compose file
-func GenerateNetworkSpec(spec config.NetworkSpec) error {
+func GenerateNetworkSpec(spec NetworkSpec) error {
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
 		"PortInc": func(port, index int) string {

@@ -13,25 +13,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package network
+package svc
 
 import (
 	"os"
 	"testing"
 
-	"github.com/aladdinid/fabric-devkit/internal/config"
 	"github.com/spf13/viper"
 )
 
-func tfixtureConfigtxYAMLExists(t *testing.T) func() {
+func tfixtureCryptoConfigYAMLExists(t *testing.T) func() {
 
 	t.Helper()
 
-	if _, err := os.Stat("network-config.yaml"); os.IsNotExist(err) {
-		t.Fatalf("network-config.yaml does not exists: %v", err)
+	if _, err := os.Stat("crypto-config.yaml"); os.IsNotExist(err) {
+		t.Fatalf("crypto-config.yaml does not exists: %v", err)
 	}
 
-	return func() { os.Remove("network-config.yaml") }
+	return func() { os.Remove("crypto-config.yaml") }
 
 }
 
@@ -42,38 +41,37 @@ func tfixtureVerifyCryptoYAMLFormatting(t *testing.T) {
 	v := viper.New()
 
 	v.AddConfigPath(".")
-	v.SetConfigName("network-config")
+	v.SetConfigName("crypto-config")
 
 	if err := v.ReadInConfig(); err != nil {
-		t.Fatalf("network-config.yaml error %v", err)
+		t.Fatalf("crypto-config.yaml error %v", err)
 	}
 
 }
 
-func TestGenerateConfigtxSpec(t *testing.T) {
+func TestGenerateCryptoSpec(t *testing.T) {
 
-	data := config.NetworkSpec{}
-	data.ChaincodePath = "$GOPATH"
+	data := NetworkSpec{}
 	data.NetworkPath = "."
 	data.Domain = "fabric.network"
-	data.OrganizationSpecs = []config.OrgSpec{
-		config.OrgSpec{
+	data.OrganizationSpecs = []OrgSpec{
+		OrgSpec{
 			Name:   "Org1",
 			ID:     "Org1MSP",
 			Anchor: "peer0",
 		},
-		config.OrgSpec{
+		OrgSpec{
 			Name:   "Org2",
 			ID:     "Org2MSP",
 			Anchor: "peer0",
 		},
-		config.OrgSpec{
+		OrgSpec{
 			Name:   "Org3",
 			ID:     "Org3MSP",
 			Anchor: "peer0",
 		},
 	}
-	data.ConsortiumSpecs = []config.ConsortiumSpec{
+	data.ConsortiumSpecs = []ConsortiumSpec{
 		{
 			Name:          "SampleConsortium",
 			ChannelName:   "TwoOrg",
@@ -81,8 +79,8 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 		},
 	}
 
-	GenerateNetworkSpec(data)
-	cleanup := tfixtureConfigtxYAMLExists(t)
+	GenerateCryptoSpec(data)
+	cleanup := tfixtureCryptoConfigYAMLExists(t)
 	defer cleanup()
 	tfixtureVerifyCryptoYAMLFormatting(t)
 }

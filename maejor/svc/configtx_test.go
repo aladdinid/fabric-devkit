@@ -13,13 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package crypto
+package svc
 
 import (
 	"os"
 	"testing"
 
-	"github.com/aladdinid/fabric-devkit/internal/config"
 	"github.com/spf13/viper"
 )
 
@@ -27,61 +26,61 @@ func tfixtureConfigtxYAMLExists(t *testing.T) func() {
 
 	t.Helper()
 
-	if _, err := os.Stat("crypto-config.yaml"); os.IsNotExist(err) {
-		t.Fatalf("crypto-config.yaml does not exists: %v", err)
+	if _, err := os.Stat("configtx.yaml"); os.IsNotExist(err) {
+		t.Fatalf("configtx.yaml does not exists: %v", err)
 	}
 
-	return func() { os.Remove("crypto-config.yaml") }
+	return func() { os.Remove("configtx.yaml") }
 
 }
 
-func tfixtureVerifyCryptoYAMLFormatting(t *testing.T) {
+func tfixtureVerifyConfigtxYAMLFormatting(t *testing.T) {
 
 	t.Helper()
 
 	v := viper.New()
 
 	v.AddConfigPath(".")
-	v.SetConfigName("crypto-config")
+	v.SetConfigName("configtx")
 
 	if err := v.ReadInConfig(); err != nil {
-		t.Fatalf("crypto-config.yaml error %v", err)
+		t.Fatalf("Configtx file error %v", err)
 	}
 
 }
 
 func TestGenerateConfigtxSpec(t *testing.T) {
 
-	data := config.NetworkSpec{}
+	data := NetworkSpec{}
 	data.NetworkPath = "."
 	data.Domain = "fabric.network"
-	data.OrganizationSpecs = []config.OrgSpec{
-		config.OrgSpec{
-			Name:   "Org1",
-			ID:     "Org1MSP",
-			Anchor: "peer0",
-		},
-		config.OrgSpec{
-			Name:   "Org2",
-			ID:     "Org2MSP",
-			Anchor: "peer0",
-		},
-		config.OrgSpec{
-			Name:   "Org3",
-			ID:     "Org3MSP",
-			Anchor: "peer0",
-		},
-	}
-	data.ConsortiumSpecs = []config.ConsortiumSpec{
+	data.ConsortiumSpecs = []ConsortiumSpec{
 		{
 			Name:          "SampleConsortium",
 			ChannelName:   "TwoOrg",
 			Organizations: []string{"Org1", "Org2"},
 		},
 	}
+	data.OrganizationSpecs = []OrgSpec{
+		{
+			Name:   "Org1",
+			ID:     "Org1MSP",
+			Anchor: "peer0",
+		},
+		{
+			Name:   "Org2",
+			ID:     "Org2MSP",
+			Anchor: "peer0",
+		},
+		{
+			Name:   "Org3",
+			ID:     "Org3MSP",
+			Anchor: "peer0",
+		},
+	}
 
-	GenerateCryptoSpec(data)
+	GenerateConfigtxSpec(data)
 	cleanup := tfixtureConfigtxYAMLExists(t)
 	defer cleanup()
-	tfixtureVerifyCryptoYAMLFormatting(t)
+	tfixtureVerifyConfigtxYAMLFormatting(t)
 }

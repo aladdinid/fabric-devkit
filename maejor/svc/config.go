@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package config
+package svc
 
 import (
 	"bytes"
@@ -69,8 +69,7 @@ Org2:
   anchor: peer0
 `
 
-// ConfigFilename is the default name for the configuration file
-var ConfigFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
+var configFilename = strings.Join([]string{ConfigName, ".yaml"}, "")
 
 // ConfigTemplate contain template engines
 var ConfigTemplate = template.Must(template.New(".maejor.yaml").Parse(configTemplateText))
@@ -78,7 +77,7 @@ var ConfigTemplate = template.Must(template.New(".maejor.yaml").Parse(configTemp
 // Create create configuration file ".maejor.yaml" in
 // specified location is one does not exists
 func Create(configPath string, projectPath string) error {
-	configFile := filepath.Join(configPath, ConfigFilename)
+	configFile := filepath.Join(configPath, configFilename)
 	if _, err := os.Stat(configFile); os.IsNotExist(err) {
 		f, err := os.Create(configFile)
 		if err != nil {
@@ -103,7 +102,7 @@ func Search(rootPath string) []string {
 
 	result := []string{}
 	err := filepath.Walk(rootPath, func(path string, f os.FileInfo, err error) error {
-		if strings.Contains(path, ConfigFilename) {
+		if strings.Contains(path, configFilename) {
 			result = append(result, path)
 		}
 		return nil
@@ -116,7 +115,8 @@ func Search(rootPath string) []string {
 	return result
 }
 
-// InitializeByReader captures bytes
+// InitializeByReader sets viper engine by byte slice
+// This is intended primarily to support testing
 func InitializeByReader(config []byte) error {
 	viper.SetConfigType("yaml")
 	if err := viper.ReadConfig(bytes.NewBuffer(config)); err != nil {
@@ -125,7 +125,8 @@ func InitializeByReader(config []byte) error {
 	return nil
 }
 
-// Initialize viper framework
+// Initialize sets viper via configuration file.
+// This is the main entry point.
 func Initialize(configPath string, configName string) error {
 
 	viper.AddConfigPath(configPath)
