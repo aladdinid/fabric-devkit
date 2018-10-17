@@ -20,7 +20,7 @@ import (
 	"text/template"
 )
 
-const configtxSpecTemplateText = `{{- $domain := .Domain}}---
+const configTxSpecTemplateText = `{{- $domain := .Domain}}---
 ################################################################################
 #
 #   Section: Organizations
@@ -213,14 +213,13 @@ Profiles:
 {{- end}}
 `
 
-// GenerateConfigtxSpec generate configtx spec
-func GenerateConfigtxSpec(spec NetworkSpec) error {
+func generateConfigTxSpec(spec NetworkSpec) error {
 
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
 	}
 
-	tpl := template.Must(template.New("ConfigTxSpec").Funcs(funcMap).Parse(configtxSpecTemplateText))
+	tpl := template.Must(template.New("ConfigTxSpec").Funcs(funcMap).Parse(configTxSpecTemplateText))
 	configtxYml := filepath.Join(spec.NetworkPath, "configtx.yaml")
 	f, err := os.Create(configtxYml)
 	if err != nil {
@@ -234,7 +233,7 @@ func GenerateConfigtxSpec(spec NetworkSpec) error {
 	return nil
 }
 
-const configtxExecSript = `#!/bin/bash
+const configTxExecSriptText = `#!/bin/bash
 
 {{- range $index, $consortium := .ConsortiumSpecs}}
 configtxgen -profile {{$consortium.ChannelName}}OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
@@ -242,11 +241,10 @@ configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx .
 {{- end}}
 `
 
-// GenerateConfigTxExecScript produces bash scripts
-func GenerateConfigTxExecScript(spec NetworkSpec) error {
+func generateConfigTxExecScript(spec NetworkSpec) error {
 
-	tpl := template.Must(template.New("ConfigTxExec").Parse(configtxExecSript))
-	generateConfigtxAssetSh := filepath.Join(spec.NetworkPath, "generateConfigtx.sh")
+	tpl := template.Must(template.New("ConfigTxExec").Parse(configTxExecSriptText))
+	generateConfigtxAssetSh := filepath.Join(spec.NetworkPath, "generateConfigTx.sh")
 	f, err := os.Create(generateConfigtxAssetSh)
 	if err != nil {
 		return err
@@ -264,11 +262,26 @@ func GenerateConfigTxExecScript(spec NetworkSpec) error {
 	return nil
 }
 
-// GenerateConfigTxAssets produces configtx assets
-func GenerateConfigTxAssets(spec NetworkSpec) error {
-	cmd := []string{"./generateConfigtx.sh"}
+func execConfigTxExecScript(spec NetworkSpec) error {
+	cmd := []string{"./generateConfigTx.sh"}
 	if err := RunCryptoConfigContainer(spec.NetworkPath, "configtx", "hyperledger/fabric-tools", cmd); err != nil {
 		return err
 	}
+	return nil
+}
+
+// CreateChannelArtefacts produces channel artefacts
+func CreateChannelArtefacts(spec NetworkSpec) error {
+
+	if err := generateConfigTxExecScript(spec); err != nil {
+		return err
+	}
+	if err := generateConfigTxSpec(spec); err != nil {
+		return err
+	}
+	if err := execConfigTxExecScript(spec); err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -95,8 +95,7 @@ PeerOrgs:
 {{- end }}
 `
 
-// GenerateCryptoSpec generate crypto spec
-func GenerateCryptoSpec(spec NetworkSpec) error {
+func generateCryptoSpec(spec NetworkSpec) error {
 
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
@@ -116,14 +115,13 @@ func GenerateCryptoSpec(spec NetworkSpec) error {
 	return nil
 }
 
-const cryptoConfigExecScript = `#!/bin/bash
+const cryptoConfigExecScriptText = `#!/bin/bash
 cryptogen generate --config=./crypto-config.yaml --output="./crypto-config"
 `
 
-// GenerateCryptoExecScript produces crypto asset generator execution script
-func GenerateCryptoExecScript(spec NetworkSpec) error {
+func generateCryptoExecScript(spec NetworkSpec) error {
 
-	scriptBody := []byte(cryptoConfigExecScript)
+	scriptBody := []byte(cryptoConfigExecScriptText)
 	generateCryptoExecSh := filepath.Join(spec.NetworkPath, "generateCryptoAsset.sh")
 	err := ioutil.WriteFile(generateCryptoExecSh, scriptBody, 0777)
 	if err != nil {
@@ -134,10 +132,26 @@ func GenerateCryptoExecScript(spec NetworkSpec) error {
 }
 
 // GenerateCryptoAssests produces crypo assets and place it in location defined by network spec
-func GenerateCryptoAssests(spec NetworkSpec) error {
+func execCryptoScript(spec NetworkSpec) error {
 
 	cmd := []string{"./generateCryptoAsset.sh"}
 	if err := RunCryptoConfigContainer(spec.NetworkPath, "cryptogen", "hyperledger/fabric-tools", cmd); err != nil {
+		return err
+	}
+	return nil
+}
+
+// CreateCryptoArtifacts produce crypto artefacts
+func CreateCryptoArtifacts(spec NetworkSpec) error {
+	if err := generateCryptoSpec(spec); err != nil {
+		return err
+	}
+
+	if err := generateCryptoExecScript(spec); err != nil {
+		return err
+	}
+
+	if err := execCryptoScript(spec); err != nil {
 		return err
 	}
 	return nil

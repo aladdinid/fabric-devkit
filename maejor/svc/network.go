@@ -157,8 +157,8 @@ services:
 {{end}}
 `
 
-// GenerateNetworkSpec produces docker compose network compose file
-func GenerateNetworkSpec(spec NetworkSpec) error {
+// CreateNetworkSpec produces docker compose network compose file
+func CreateNetworkSpec(spec NetworkSpec) error {
 	funcMap := template.FuncMap{
 		"ToLower": strings.ToLower,
 		"PortInc": func(port, index int) string {

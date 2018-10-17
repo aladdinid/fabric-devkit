@@ -23,32 +23,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var specCmd = &cobra.Command{
-	Use:   "specs",
-	Short: "Create artefacts",
+var projectCmd = &cobra.Command{
+	Use:   "project",
+	Short: "Create a project",
 	Run: func(cmd *cobra.Command, args []string) {
 		createNetworkPath()
 		createChannelArtefactPath()
-		if err := svc.GenerateConfigtxSpec(*networkSpec); err != nil {
+		// You must create crypto first then channel artefacts
+		if err := svc.CreateCryptoArtifacts(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
-		if err := svc.GenerateConfigTxExecScript(*networkSpec); err != nil {
+		if err := svc.CreateChannelArtefacts(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
-		if err := svc.GenerateCryptoSpec(*networkSpec); err != nil {
+		if err := svc.CreateNetworkSpec(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
-		if err := svc.GenerateCryptoExecScript(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
-
-		if err := svc.GenerateCryptoAssests(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
-
-		if err := svc.GenerateConfigTxAssets(*networkSpec); err != nil {
-			log.Fatal(err)
-		}
-
 	},
 }

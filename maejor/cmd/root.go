@@ -54,8 +54,8 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(specCmd)
 	rootCmd.AddCommand(imageCmd)
+	rootCmd.AddCommand(projectCmd)
 }
 
 func initConfig() {
