@@ -131,13 +131,32 @@ func generateCryptoExecScript(spec NetworkSpec) error {
 	return nil
 }
 
-// GenerateCryptoAssests produces crypo assets and place it in location defined by network spec
 func execCryptoScript(spec NetworkSpec) error {
 
 	cmd := []string{"./generateCryptoAsset.sh"}
 	if err := RunCryptoConfigContainer(spec.NetworkPath, "cryptogen", "hyperledger/fabric-tools", cmd); err != nil {
 		return err
 	}
+	return nil
+}
+
+func renameCAKeys(spec NetworkSpec) error {
+
+	peerOrgPath := filepath.Join(spec.CryptoPath, "peerOrganizations")
+
+	for _, orgSpec := range spec.OrganizationSpecs {
+		orgName := strings.Join([]string{orgSpec.Name, spec.Domain}, ".")
+		caPath := filepath.Join(peerOrgPath, orgName, "ca")
+		filepath.Walk(caPath, func(path string, f os.FileInfo, err error) error {
+			if strings.Contains(path, "_sk") {
+				if err := os.Rename(path, strings.Join([]string{caPath, "secret.key"}, "/")); err != nil {
+					return err
+				}
+			}
+			return nil
+		})
+	}
+
 	return nil
 }
 
@@ -154,5 +173,10 @@ func CreateCryptoArtifacts(spec NetworkSpec) error {
 	if err := execCryptoScript(spec); err != nil {
 		return err
 	}
+
+	if err := renameCAKeys(spec); err != nil {
+		return err
+	}
+
 	return nil
 }
