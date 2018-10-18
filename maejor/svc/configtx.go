@@ -236,8 +236,11 @@ func generateConfigTxSpec(spec NetworkSpec) error {
 const configTxExecSriptText = `#!/bin/bash
 
 {{- range $index, $consortium := .ConsortiumSpecs}}
-configtxgen -profile {{$consortium.ChannelName}}OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
-configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/channel.tx -channelID {{$consortium.ChannelName}}
+
+mkdir -p ./channel-artefacts/{{$consortium.ChannelName}}
+
+configtxgen -profile {{$consortium.ChannelName}}OrdererGenesis -outputBlock ./channel-artefacts/{{$consortium.ChannelName}}/genesis.block
+configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/{{$consortium.ChannelName}}/channel.tx -channelID {{$consortium.ChannelName}}
 {{- end}}
 `
 
