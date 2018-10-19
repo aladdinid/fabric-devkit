@@ -97,3 +97,10 @@ func createChannelArtefactPath() {
 		log.Fatal(err)
 	}
 }
+
+func createScriptPath() {
+	scriptPath := svc.ScriptPath()
+	if err := os.MkdirAll(scriptPath, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+}

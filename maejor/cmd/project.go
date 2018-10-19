@@ -29,6 +29,7 @@ var projectCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		createNetworkPath()
 		createChannelArtefactPath()
+		createScriptPath()
 		// You must create crypto first then channel artefacts
 		if err := svc.CreateCryptoArtifacts(*networkSpec); err != nil {
 			log.Fatal(err)
@@ -37,6 +38,9 @@ var projectCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		if err := svc.CreateNetworkSpec(*networkSpec); err != nil {
+			log.Fatal(err)
+		}
+		if err := svc.GenerateScripts(*networkSpec); err != nil {
 			log.Fatal(err)
 		}
 	},
