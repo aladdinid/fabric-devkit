@@ -122,8 +122,8 @@ cryptogen generate --config=./crypto-config.yaml --output="./crypto-config"
 func generateCryptoExecScript(spec NetworkSpec) error {
 
 	scriptBody := []byte(cryptoConfigExecScriptText)
-	generateCryptoExecSh := filepath.Join(spec.NetworkPath, "generateCryptoAsset.sh")
-	err := ioutil.WriteFile(generateCryptoExecSh, scriptBody, 0777)
+	bashScript := filepath.Join(spec.NetworkPath, "generateCryptoAsset.sh")
+	err := ioutil.WriteFile(bashScript, scriptBody, 0777)
 	if err != nil {
 		return err
 	}
