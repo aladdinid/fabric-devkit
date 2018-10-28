@@ -117,7 +117,7 @@ services:
              /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-      - ./crypto-config/peerOrganizations/org1.fabric.network/peers/{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}/:/etc/hyperledger/fabric/crypto-config/
+      - ./crypto-config/peerOrganizations/{{$org.Name | ToLower}}.fabric.network/peers/{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}/:/etc/hyperledger/fabric/crypto-config/
     ports:
       - {{PortInc 7051 $index}}:7051
       - {{PortInc 7053 $index}}:7053
