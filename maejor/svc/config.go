@@ -97,8 +97,8 @@ func Create(configPath string, projectPath string) error {
 	return nil
 }
 
-// Search for configuration file
-func Search(rootPath string) []string {
+// SearchConfigFile for configuration file
+func SearchConfigFile(rootPath string) []string {
 
 	result := []string{}
 	err := filepath.Walk(rootPath, func(path string, f os.FileInfo, err error) error {

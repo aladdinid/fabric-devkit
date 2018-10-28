@@ -168,8 +168,8 @@ func CreateNetworkSpec(spec NetworkSpec) error {
 	}
 
 	tpl := template.Must(template.New("Main").Funcs(funcMap).Parse(networkSpec))
-	configtxYml := filepath.Join(spec.NetworkPath, "network-config.yaml")
-	f, err := os.Create(configtxYml)
+	networkSpecYML := filepath.Join(spec.NetworkPath, "network-config.yaml")
+	f, err := os.Create(networkSpecYML)
 	if err != nil {
 		return err
 	}

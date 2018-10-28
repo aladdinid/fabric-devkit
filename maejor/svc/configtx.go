@@ -238,17 +238,18 @@ func generateConfigTxSpec(spec NetworkSpec) error {
 const configTxExecSriptText = `#!/bin/bash
 
 {{- range $index, $consortium := .ConsortiumSpecs}}
-
-mkdir -p ./channel-artefacts/{{$consortium.ChannelName}}
-
 configtxgen -profile OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
-configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/{{$consortium.ChannelName}}/channel.tx -channelID {{$consortium.ChannelName}}
+configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/{{$consortium.ChannelName | ToLower }}.tx -channelID {{$consortium.ChannelName}}
 {{- end}}
 `
 
 func generateConfigTxExecScript(spec NetworkSpec) error {
 
-	tpl := template.Must(template.New("ConfigTxExec").Parse(configTxExecSriptText))
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+
+	tpl := template.Must(template.New("ConfigTxExec").Funcs(funcMap).Parse(configTxExecSriptText))
 	generateConfigtxAssetSh := filepath.Join(spec.NetworkPath, "generateConfigTx.sh")
 	f, err := os.Create(generateConfigtxAssetSh)
 	if err != nil {

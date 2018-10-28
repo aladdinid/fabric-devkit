@@ -67,7 +67,7 @@ func TestSearch(t *testing.T) {
 
 	t.Run("NoConfig", func(t *testing.T) {
 		noConfigPath := filepath.Join(fixture, "..")
-		result := Search(noConfigPath)
+		result := SearchConfigFile(noConfigPath)
 		actual := len(result)
 		expected := 0
 		if expected != actual {
@@ -78,7 +78,7 @@ func TestSearch(t *testing.T) {
 	t.Run("ConfigExists", func(t *testing.T) {
 		removeConfigFunc := tfixtureCreateConfigFile(t)
 		defer removeConfigFunc()
-		result := Search(fixture)
+		result := SearchConfigFile(fixture)
 		actual := len(result)
 		expected := 1
 		if expected != actual {

@@ -79,7 +79,7 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 		},
 	}
 
-	GenerateConfigtxSpec(data)
+	generateConfigTxSpec(data)
 	cleanup := tfixtureConfigtxYAMLExists(t)
 	defer cleanup()
 	tfixtureVerifyConfigtxYAMLFormatting(t)

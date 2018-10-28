@@ -41,8 +41,7 @@ func init() {
 	cli = c
 }
 
-// PullImage initate a pull from Dockerhub
-func PullImage(name string) (io.ReadCloser, error) {
+func pullImage(name string) (io.ReadCloser, error) {
 
 	if cli == nil {
 		return nil, fmt.Errorf("session not started")
@@ -60,7 +59,7 @@ func PullImage(name string) (io.ReadCloser, error) {
 func PullImages(names []string) error {
 
 	for _, name := range names {
-		reader, err := PullImage(name)
+		reader, err := pullImage(name)
 		if err != nil {
 			reader.Close()
 			return err
@@ -72,8 +71,7 @@ func PullImages(names []string) error {
 	return nil
 }
 
-// TagImage downloaded images
-func TagImage(source string, target func(string) string) error {
+func tagImage(source string, target func(string) string) error {
 
 	if cli == nil {
 		return fmt.Errorf("session not started")
@@ -91,7 +89,7 @@ func TagImage(source string, target func(string) string) error {
 func TagImages(sources []string, target func(string) string) error {
 
 	for _, source := range sources {
-		err := TagImage(source, target)
+		err := tagImage(source, target)
 		if err != nil {
 			return err
 		}
@@ -110,8 +108,7 @@ func TargetTagAsLatest(source string) string {
 	return strings.Join(result, ":")
 }
 
-// SearchImages search for images by name
-func SearchImages(source string) ([]string, error) {
+func searchImage(source string) ([]string, error) {
 
 	if cli == nil {
 		return nil, fmt.Errorf("session not started")
@@ -152,7 +149,7 @@ func RemoveImage(imageID string) ([]types.ImageDeleteResponseItem, error) {
 // DeleteImages remove downloaded images
 func DeleteImages(images []string) error {
 	for _, image := range images {
-		ids, err := SearchImages(image)
+		ids, err := searchImage(image)
 		if err != nil {
 			return err
 		}

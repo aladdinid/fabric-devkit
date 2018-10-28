@@ -28,7 +28,7 @@ const tfixtureHelloWorldLatest = "hello-world"
 func TestBasicOperations(t *testing.T) {
 
 	t.Run("PullImage", func(t *testing.T) {
-		reader, err := PullImage(tfixtureHelloWorldLinux)
+		reader, err := pullImage(tfixtureHelloWorldLinux)
 		if err != nil {
 			t.Fatalf("Error: %v", err)
 		}
@@ -43,11 +43,11 @@ func TestBasicOperations(t *testing.T) {
 	})
 
 	t.Run("SearchImage", func(t *testing.T) {
-		if _, err := SearchImages("hello-world:*"); err != nil {
+		if _, err := searchImage("hello-world:*"); err != nil {
 			t.Fatalf("Expected: no error Got: %v", err)
 		}
 
-		result, err := SearchImages("hello-world:*")
+		result, err := searchImage("hello-world:*")
 		if err != nil {
 			t.Fatalf("Expected: no error Got: %v", err)
 		}
@@ -58,7 +58,7 @@ func TestBasicOperations(t *testing.T) {
 	})
 
 	t.Run("RemoveImage", func(t *testing.T) {
-		ids, err := SearchImages("hello-world")
+		ids, err := searchImage("hello-world")
 		if err != nil {
 			t.Fatal("image is not found")
 		}
@@ -76,7 +76,7 @@ func TestBasicOperations(t *testing.T) {
 }
 
 func tfixtureRemoveImage(t *testing.T) {
-	ids, err := SearchImages("hello-world")
+	ids, err := searchImage("hello-world")
 	if err != nil {
 		t.Fatal("image is not found")
 	}
@@ -88,7 +88,7 @@ func tfixtureRemoveImage(t *testing.T) {
 }
 
 func tfixturePullDummyImage(t *testing.T) {
-	reader, err := PullImage(tfixtureHelloWorldLinux)
+	reader, err := pullImage(tfixtureHelloWorldLinux)
 	if err != nil {
 		t.Fatalf("Error %v", err)
 	}
@@ -109,7 +109,7 @@ func TestTaggingImages(t *testing.T) {
 	t.Run("TagImage", func(t *testing.T) {
 		tfixturePullDummyImage(t)
 
-		err := TagImage(tfixtureHelloWorldLinux, TargetTagAsLatest)
+		err := tagImage(tfixtureHelloWorldLinux, TargetTagAsLatest)
 		if err != nil {
 			t.Fatalf("Error not expected. Got: %v", err)
 		}
@@ -140,7 +140,7 @@ func tfixtureLocation(t *testing.T) string {
 }
 
 func tfixturePullFabricTools(t *testing.T) {
-	reader, err := PullImage("hyperledger/fabric-tools:x86_64-1.1.0")
+	reader, err := pullImage("hyperledger/fabric-tools:x86_64-1.1.0")
 	if err != nil {
 		t.Fatal("Unable to pull fabric-tools:x86_64-1.1.0")
 	}
@@ -150,7 +150,7 @@ func tfixturePullFabricTools(t *testing.T) {
 }
 
 func tfixtureTagFabricTools(t *testing.T) {
-	err := TagImage("hyperledger/fabric-tools:x86_64-1.1.0", TargetTagAsLatest)
+	err := tagImage("hyperledger/fabric-tools:x86_64-1.1.0", TargetTagAsLatest)
 	if err != nil {
 		t.Fatalf("Expected no error. Got %v", err)
 	}

@@ -55,7 +55,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(imageCmd)
-	rootCmd.AddCommand(projectCmd)
+	rootCmd.AddCommand(networkCmd)
 }
 
 func initConfig() {
@@ -79,28 +79,6 @@ func initConfig() {
 // Execute cobra chain of commands
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func createNetworkPath() {
-
-	networkPath := svc.NetworkPath()
-	if err := os.MkdirAll(networkPath, os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func createChannelArtefactPath() {
-	channelArtefactPath := svc.ChannelArtefactPath()
-	if err := os.MkdirAll(channelArtefactPath, os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func createScriptPath() {
-	scriptPath := svc.ScriptPath()
-	if err := os.MkdirAll(scriptPath, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -79,7 +79,7 @@ func TestGenerateCryptoSpec(t *testing.T) {
 		},
 	}
 
-	GenerateCryptoSpec(data)
+	generateCryptoSpec(data)
 	cleanup := tfixtureCryptoConfigYAMLExists(t)
 	defer cleanup()
 	tfixtureVerifyCryptoYAMLFormatting(t)
