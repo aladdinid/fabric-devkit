@@ -46,7 +46,7 @@ while getopts "o:c:l:p:v:" opt; do
   esac
 done
 
-peer channel create -o $ORDERER -c $CHANNELNAME -f ./channel-artefacts/$CHANNELNAME/channel.tx --tls --cafile $ORDERER_CA
+peer channel create -o $ORDERER -c $CHANNELNAME -f ./channel-artefacts/$CHANNELNAME.tx --tls --cafile $ORDERER_CA
 `
 
 func generateCreateChannelScript(spec NetworkSpec) error {
@@ -87,11 +87,11 @@ while getopts "o:c:l:p:v:" opt; do
   esac
 done
 
-if [ -f "./$CHANNELNAME/$CHANNELNAME.block" ]; then
-   peer channel fetch newest -o $ORDERER -c $CHANNELNAME --tls --cafile $ORDERER_CA ./CHANNELNAME/$CHANNELNAME.block
+if [ -f "./genesis.block" ]; then
+   peer channel fetch newest -o $ORDERER -c $CHANNELNAME --tls --cafile $ORDERER_CA ./genesis.block
 fi
 
-peer channel join -o $ORDERER -b ./CHANNELNAME/$CHANNELNAME.block --tls --cafile $ORDERER_CA
+peer channel join -o $ORDERER -b ./genesis.block --tls --cafile $ORDERER_CA
 `
 
 func generateJoinChannelScript(spec NetworkSpec) error {
