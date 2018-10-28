@@ -183,8 +183,7 @@ Orderer: &OrdererDefaults
 ################################################################################
 Profiles:
 
-{{- range $index, $consortium := .ConsortiumSpecs}}
-    {{$consortium.ChannelName}}OrdererGenesis:
+    OrdererGenesis:
         Capabilities:
             <<: *ChannelCapabilities
         Orderer:
@@ -194,12 +193,15 @@ Profiles:
             Capabilities:
                 <<: *OrdererCapabilities
         Consortiums:
+        {{- range $index, $consortium := .ConsortiumSpecs}}
             {{$consortium.Name}}:
                 Organizations:
                 {{- range $index, $org := $consortium.Organizations}} 
                   - *{{$org}}
                 {{- end}}
+        {{end}}
 
+{{- range $index, $consortium := .ConsortiumSpecs}}                
     {{$consortium.ChannelName}}Channel:
         Consortium: {{$consortium.Name}}
         Application:
@@ -239,7 +241,7 @@ const configTxExecSriptText = `#!/bin/bash
 
 mkdir -p ./channel-artefacts/{{$consortium.ChannelName}}
 
-configtxgen -profile {{$consortium.ChannelName}}OrdererGenesis -outputBlock ./channel-artefacts/{{$consortium.ChannelName}}/genesis.block
+configtxgen -profile OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
 configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/{{$consortium.ChannelName}}/channel.tx -channelID {{$consortium.ChannelName}}
 {{- end}}
 `
