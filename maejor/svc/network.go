@@ -133,8 +133,8 @@ services:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=debug
-      - CORE_PEER_ID=peer0.org1.fabric.network
-      - CORE_PEER_ADDRESS=peer0.org1.fabric.network:7051
+      - CORE_PEER_ID={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
+      - CORE_PEER_ADDRESS={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
