@@ -20,11 +20,16 @@ type OrgSpec struct {
 	Anchor string `json:"anchor"`
 }
 
+// ChannelSpec represents the specification of a channel
+type ChannelSpec struct {
+	Name          string `json:"name"`
+	Organizations []string
+}
+
 // ConsortiumSpec represents the specification of a consortium
 type ConsortiumSpec struct {
-	Name          string `json:"name"`
-	ChannelName   string `json:"channelname"`
-	Organizations []string
+	Name         string `json:"name"`
+	ChannelSpecs []ChannelSpec
 }
 
 // NetworkSpec represents specification of a Fabric network

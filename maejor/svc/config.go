@@ -15,6 +15,7 @@ package svc
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,9 +54,19 @@ network:
 
 SampleConsortium:
    name: "SampleConsortium"
-   channelname: "TwoOrg"
-   organizations:
+   channels: 
+     - ChannelOne
+     - ChannelTwo
+
+ChannelOne:
+  name: "ChannelOne"
+  organizations:
      - Org1
+     - Org2
+
+ChannelTwo:
+   name: "ChannelTwo"
+   organizations:
      - Org2
 
 Org1:
@@ -115,9 +126,7 @@ func SearchConfigFile(rootPath string) []string {
 	return result
 }
 
-// InitializeByReader sets viper engine by byte slice
-// This is intended primarily to support testing
-func InitializeByReader(config []byte) error {
+func initializeByReader(config []byte) error {
 	viper.SetConfigType("yaml")
 	if err := viper.ReadConfig(bytes.NewBuffer(config)); err != nil {
 		return err
@@ -180,6 +189,29 @@ func Domain() string {
 	return viper.GetString("network.domain")
 }
 
+func channelByName(name string) ChannelSpec {
+	value := viper.GetStringMap(name)
+
+	var spec = ChannelSpec{}
+
+	for _, v := range value {
+
+		switch vv := v.(type) {
+		case string:
+			spec.Name = vv
+		case []interface{}:
+			s := make([]string, len(vv))
+			for i, v := range vv {
+				s[i] = fmt.Sprintf("%v", v)
+			}
+			spec.Organizations = s
+		default:
+		}
+	}
+
+	return spec
+}
+
 func consortiumByName(name string) ConsortiumSpec {
 	value := viper.GetStringMap(name)
 
@@ -190,22 +222,16 @@ func consortiumByName(name string) ConsortiumSpec {
 		spec.Name = name
 	}
 
-	channelName, ok := value["channelname"].(string)
-	if ok {
-		spec.ChannelName = channelName
-	}
-
-	iOrgs, ok := value["organizations"].([]interface{})
-	if ok {
-		var orgs []string
-		for _, iOrg := range iOrgs {
-			switch s := iOrg.(type) {
-			case string:
-				orgs = append(orgs, s)
+	switch v := value["channels"].(type) {
+	case []interface{}:
+		var channelSpecs []ChannelSpec
+		for _, vv := range v {
+			vvv, ok := vv.(string)
+			if ok {
+				channelSpecs = append(channelSpecs, channelByName(vvv))
 			}
 		}
-		spec.Organizations = orgs
-
+		spec.ChannelSpecs = channelSpecs
 	}
 
 	return spec

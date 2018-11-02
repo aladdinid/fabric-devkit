@@ -43,7 +43,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error: unable to generate config writer. Got: %v", err)
 	}
 
-	err = InitializeByReader(b.Bytes())
+	err = initializeByReader(b.Bytes())
 	if err != nil {
 		log.Fatalf("Unable to configure config object: %v", err)
 	}
@@ -131,27 +131,26 @@ func TestConsortiumByName(t *testing.T) {
 
 	})
 
-	t.Run("VerifyType", func(t *testing.T) {
-		consortium := consortiumByName("SampleConsortium")
-		value := reflect.ValueOf(&consortium).Elem()
-
-		expected := 3
-		actual := value.NumField()
-		if expected != actual {
-			t.Fatalf("Expected: %d fields Got: %d", expected, actual)
-		}
-	})
-
-	t.Run("ConsortiumFound", func(t *testing.T) {
-		actual := consortiumByName("SampleConsortium")
-		expected := ConsortiumSpec{
-			Name:          "SampleConsortium",
-			ChannelName:   "TwoOrg",
-			Organizations: []string{"Org1", "Org2"},
-		}
+	t.Run("ChannelByName", func(t *testing.T) {
+		actual := channelByName("ChannelOne")
+		expected := ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}}
 
 		if !reflect.DeepEqual(expected, actual) {
-			t.Fatalf("Expected: %v Got: %v", expected, actual)
+			t.Fatalf("Expected: %v, Got: %v", expected, actual)
+		}
+
+	})
+
+	t.Run("ConsortiumByName", func(t *testing.T) {
+		actual := consortiumByName("SampleConsortium")
+		channelSpecs := []ChannelSpec{
+			ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
+			ChannelSpec{Name: "ChannelTwo", Organizations: []string{"Org2"}},
+		}
+		expected := ConsortiumSpec{Name: "SampleConsortium", ChannelSpecs: channelSpecs}
+
+		if !reflect.DeepEqual(expected, actual) {
+			t.Fatalf("Expected: %v, Got: %v", expected, actual)
 		}
 
 	})
@@ -160,12 +159,13 @@ func TestConsortiumByName(t *testing.T) {
 
 func TestConsortiumSpecs(t *testing.T) {
 
+	channelSpecs := []ChannelSpec{
+		ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
+		ChannelSpec{Name: "ChannelTwo", Organizations: []string{"Org2"}},
+	}
+
 	expected := []ConsortiumSpec{
-		{
-			Name:          "SampleConsortium",
-			ChannelName:   "TwoOrg",
-			Organizations: []string{"Org1", "Org2"},
-		},
+		ConsortiumSpec{Name: "SampleConsortium", ChannelSpecs: channelSpecs},
 	}
 	actual := ConsortiumSpecs()
 
