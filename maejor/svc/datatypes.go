@@ -13,6 +13,11 @@ limitations under the License.
 
 package svc
 
+import (
+	"fmt"
+	"strings"
+)
+
 // OrgSpec represents specification of an orgnizations
 type OrgSpec struct {
 	Name   string `json:"name"`
@@ -32,6 +37,36 @@ type ConsortiumSpec struct {
 	ChannelSpecs []ChannelSpec
 }
 
+// CliSpec represents information for generating cli execution script
+type CliSpec struct {
+	Name              string
+	ChannelNames      []string
+	OrdererDomainName string
+}
+
+func cliSpecs(network *NetworkSpec) []CliSpec {
+
+	var cliSpecs = []CliSpec{}
+
+	ordererDomainName := fmt.Sprintf("orderer.%s", network.Domain)
+
+	for _, orgSpec := range network.OrganizationSpecs {
+		cliSpec := CliSpec{}
+		cliSpec.Name = fmt.Sprintf("cli.%s.%s.%s", orgSpec.Anchor, strings.ToLower(orgSpec.Name), network.Domain)
+		cliSpec.ChannelNames = []string{}
+		for _, consortiumSpec := range network.ConsortiumSpecs {
+			for _, chanSpec := range consortiumSpec.ChannelSpecs {
+				cliSpec.ChannelNames = append(cliSpec.ChannelNames, chanSpec.Name)
+			}
+		}
+		cliSpec.OrdererDomainName = ordererDomainName
+		cliSpecs = append(cliSpecs, cliSpec)
+	}
+
+	return cliSpecs
+
+}
+
 // NetworkSpec represents specification of a Fabric network
 type NetworkSpec struct {
 	ScriptPath          string `json:"scriptpath"`
@@ -42,6 +77,7 @@ type NetworkSpec struct {
 	Domain              string `json:"domain"`
 	ConsortiumSpecs     []ConsortiumSpec
 	OrganizationSpecs   []OrgSpec
+	CliSpecs            []CliSpec
 }
 
 // NewNetworkSpec instantiate a reference to a new spec
@@ -56,6 +92,8 @@ func NewNetworkSpec() *NetworkSpec {
 	spec.Domain = Domain()
 	spec.ConsortiumSpecs = ConsortiumSpecs()
 	spec.OrganizationSpecs = OrganizationSpecs()
+
+	spec.CliSpecs = cliSpecs(spec)
 
 	return spec
 }
