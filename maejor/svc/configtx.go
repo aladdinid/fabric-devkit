@@ -243,18 +243,19 @@ func generateConfigTxSpec(spec NetworkSpec) error {
 
 const configTxExecSriptText = `#!/bin/bash
 
-{{- range $index1, $consortium := .ConsortiumSpecs}}
+# Generate genesis block
 configtxgen -profile OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
 
-  {{- range $index2, $channelSpec := $consortium.ChannelSpecs}}
+{{- range $index1, $consortium := .ConsortiumSpecs}}
+  {{range $index2, $channelSpec := $consortium.ChannelSpecs}}
+# {{$channelSpec.Name}} configuration
 configtxgen -profile {{$channelSpec.Name}} -outputCreateChannelTx ./channel-artefacts/{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}}
-
-      {{- range $index3, $org := $channelSpec.Organizations}}
+      {{range $index3, $org := $channelSpec.Organizations}}
+# Anchor peer for {{$channelSpec.Name}} for transaction of {{$org}}
 configtxgen -profile {{$channelSpec.Name}} -outputAnchorPeersUpdate ./channel-artefacts/{{$org}}MSPanchors_{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}} -asOrg {{$org}}MSP
-      {{- end}}
+      {{end}}
   {{- end}}
-
-{{- end}}
+{{end}}
 `
 
 func generateConfigTxExecScript(spec NetworkSpec) error {
