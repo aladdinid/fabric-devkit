@@ -36,7 +36,7 @@ Organizations:
     - &OrdererOrg
       # DefaultOrg defines the organization which is used in the sampleconfig
       # of the fabric.git development environment
-      Name: Orderer
+      Name: OrdererMSP
 
       # ID to load the MSP definition as
       ID: OrdererMSP
@@ -48,7 +48,7 @@ Organizations:
     - &{{$org.Name}}
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: {{$org.Name}}
+        Name: {{$org.Name}}MSP
 
         # ID to load the MSP definition as
         ID: {{$org.ID}}
@@ -193,25 +193,31 @@ Profiles:
             Capabilities:
                 <<: *OrdererCapabilities
         Consortiums:
+        {{- $allOrgs := .OrganizationSpecs}}
         {{- range $index, $consortium := .ConsortiumSpecs}}
             {{$consortium.Name}}:
                 Organizations:
-                {{- range $index, $org := $consortium.Organizations}} 
-                  - *{{$org}}
+                {{- range $index, $org := $allOrgs}} 
+                  - *{{$org.Name}}
                 {{- end}}
-        {{end}}
+        {{- end}}
 
-{{- range $index, $consortium := .ConsortiumSpecs}}                
-    {{$consortium.ChannelName}}Channel:
+{{- range $index, $consortium := .ConsortiumSpecs}}  
+    
+    {{- range $index, $channelSpec := $consortium.ChannelSpecs}}
+
+    {{$channelSpec.Name}}:
         Consortium: {{$consortium.Name}}
         Application:
             <<: *ApplicationDefaults
             Organizations:
-			{{- range $index, $org := $consortium.Organizations}}
+			{{- range $index, $org := $channelSpec.Organizations}}
                 - *{{$org}}
             {{- end}} 
             Capabilities:
                 <<: *ApplicationCapabilities
+    
+    {{- end}}
 {{- end}}
 `
 
@@ -237,9 +243,17 @@ func generateConfigTxSpec(spec NetworkSpec) error {
 
 const configTxExecSriptText = `#!/bin/bash
 
-{{- range $index, $consortium := .ConsortiumSpecs}}
+{{- range $index1, $consortium := .ConsortiumSpecs}}
 configtxgen -profile OrdererGenesis -outputBlock ./channel-artefacts/genesis.block
-configtxgen -profile {{$consortium.ChannelName}}Channel -outputCreateChannelTx ./channel-artefacts/{{$consortium.ChannelName | ToLower }}.tx -channelID {{$consortium.ChannelName}}
+
+  {{- range $index2, $channelSpec := $consortium.ChannelSpecs}}
+configtxgen -profile {{$channelSpec.Name}} -outputCreateChannelTx ./channel-artefacts/{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}}
+
+      {{- range $index3, $org := $channelSpec.Organizations}}
+configtxgen -profile {{$channelSpec.Name}} -outputAnchorPeersUpdate ./channel-artefacts/{{$org}}MSPanchors_{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}} -asOrg {{$org}}MSP
+      {{- end}}
+  {{- end}}
+
 {{- end}}
 `
 

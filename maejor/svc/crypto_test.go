@@ -54,28 +54,30 @@ func TestGenerateCryptoSpec(t *testing.T) {
 	data := NetworkSpec{}
 	data.NetworkPath = "."
 	data.Domain = "fabric.network"
+	data.ConsortiumSpecs = []ConsortiumSpec{
+		{
+			Name: "SampleConsortium",
+			ChannelSpecs: []ChannelSpec{
+				ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
+				ChannelSpec{Name: "ChannelTwo", Organizations: []string{"Org2"}},
+			},
+		},
+	}
 	data.OrganizationSpecs = []OrgSpec{
-		OrgSpec{
+		{
 			Name:   "Org1",
 			ID:     "Org1MSP",
 			Anchor: "peer0",
 		},
-		OrgSpec{
+		{
 			Name:   "Org2",
 			ID:     "Org2MSP",
 			Anchor: "peer0",
 		},
-		OrgSpec{
+		{
 			Name:   "Org3",
 			ID:     "Org3MSP",
 			Anchor: "peer0",
-		},
-	}
-	data.ConsortiumSpecs = []ConsortiumSpec{
-		{
-			Name:          "SampleConsortium",
-			ChannelName:   "TwoOrg",
-			Organizations: []string{"Org1", "Org2"},
 		},
 	}
 

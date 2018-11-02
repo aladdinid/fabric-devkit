@@ -56,9 +56,11 @@ func TestGenerateConfigtxSpec(t *testing.T) {
 	data.Domain = "fabric.network"
 	data.ConsortiumSpecs = []ConsortiumSpec{
 		{
-			Name:          "SampleConsortium",
-			ChannelName:   "TwoOrg",
-			Organizations: []string{"Org1", "Org2"},
+			Name: "SampleConsortium",
+			ChannelSpecs: []ChannelSpec{
+				ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
+				ChannelSpec{Name: "ChannelTwo", Organizations: []string{"Org2"}},
+			},
 		},
 	}
 	data.OrganizationSpecs = []OrgSpec{
