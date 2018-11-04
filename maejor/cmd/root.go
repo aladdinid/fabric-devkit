@@ -54,7 +54,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.AddCommand(imageCmd)
+	rootCmd.AddCommand(containerCmd)
 	rootCmd.AddCommand(networkCmd)
 }
 

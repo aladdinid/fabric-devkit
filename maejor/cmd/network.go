@@ -26,41 +26,45 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var networkSpecCreate bool
-var networkSpecDelete bool
-
-var networkCmd = &cobra.Command{
-	Use:   "network",
-	Short: "Generate specifications for your network",
+var generateNetworkSpecCmd = &cobra.Command{
+	Use:   "generate",
+	Short: "Skeleton network specification",
 	Run: func(cmd *cobra.Command, args []string) {
-		if networkSpecCreate {
-			if err := createNetworkSpec(); err != nil {
-				if strings.Contains(err.Error(), "Error: No such image: hyperledger/fabric-tools") {
-					fmt.Println(err)
-					fmt.Println(`Please run the command: "maejor image"`)
-				} else {
-					log.Fatal(err)
-				}
-			}
-		}
-		if networkSpecDelete {
-
-			var yesResponse string
-
-			fmt.Print("Delete you project specs [N/y]? ")
-			fmt.Scanln(&yesResponse)
-			if strings.Compare(strings.ToLower(yesResponse), "y") == 0 || strings.Compare(strings.ToLower(yesResponse), "yes") == 0 {
-				if err := deleteNetworkSpec(); err != nil {
-					log.Fatal(err)
-				}
+		if err := createNetworkSpec(); err != nil {
+			if strings.Contains(err.Error(), "Error: No such image: hyperledger/fabric-tools") {
+				fmt.Println(err)
+				fmt.Println(`Please run the command: "maejor container image pull"`)
+			} else {
+				log.Fatal(err)
 			}
 		}
 	},
 }
 
+var deleteNetworkSpecCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Network specification",
+	Run: func(cmd *cobra.Command, args []string) {
+		var yesResponse string
+
+		fmt.Print("Delete you project specs [N/y]? ")
+		fmt.Scanln(&yesResponse)
+		if strings.Compare(strings.ToLower(yesResponse), "y") == 0 || strings.Compare(strings.ToLower(yesResponse), "yes") == 0 {
+			if err := deleteNetworkSpec(); err != nil {
+				log.Fatal(err)
+			}
+		}
+	},
+}
+
+var networkCmd = &cobra.Command{
+	Use:   "network",
+	Short: "Operations to generate network specification",
+}
+
 func init() {
-	networkCmd.Flags().BoolVarP(&networkSpecCreate, "create", "c", false, "create spec")
-	networkCmd.Flags().BoolVarP(&networkSpecDelete, "delete", "d", false, "delete spec")
+	networkCmd.AddCommand(generateNetworkSpecCmd)
+	networkCmd.AddCommand(deleteNetworkSpecCmd)
 }
 
 func createNetworkSpec() error {
@@ -87,9 +91,6 @@ func createNetworkSpec() error {
 		return err
 	}
 	if err := svc.CreateNetworkSpec(*networkSpec); err != nil {
-		return err
-	}
-	if err := svc.GenerateScripts(*networkSpec); err != nil {
 		return err
 	}
 

@@ -23,25 +23,42 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var imagesRemoved bool
-
-var imageCmd = &cobra.Command{
-	Use:   "image",
-	Short: "Manage relevant docker images for the project",
+var pullImageCmd = &cobra.Command{
+	Use:   "pull",
+	Short: "Images from docker registry",
 	Run: func(cmd *cobra.Command, args []string) {
 		hyperledger := svc.HyperledgerImages()
 		pullAndRetagImages(hyperledger)
-		if imagesRemoved {
-			err := deleteImages(hyperledger)
-			if err != nil {
-				log.Fatal(err)
-			}
+	},
+}
+
+var deleteImageCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Images from local registry",
+	Run: func(cmd *cobra.Command, args []string) {
+		hyperledger := svc.HyperledgerImages()
+		err := deleteImages(hyperledger)
+		if err != nil {
+			log.Fatal(err)
 		}
 	},
 }
 
+var imageCmd = &cobra.Command{
+	Use:   "image",
+	Short: "Managing container images",
+}
+
+var containerCmd = &cobra.Command{
+	Use:   "container",
+	Short: "Manage containers",
+}
+
 func init() {
-	imageCmd.Flags().BoolVarP(&imagesRemoved, "reset", "r", false, "delete and pull images")
+	imageCmd.AddCommand(pullImageCmd)
+	imageCmd.AddCommand(deleteImageCmd)
+	containerCmd.AddCommand(imageCmd)
+
 }
 
 func pullAndRetagImages(images []string) {
