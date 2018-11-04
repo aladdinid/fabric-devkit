@@ -59,7 +59,7 @@ func TestMain(m *testing.M) {
 // Config services tests
 func TestConfig(t *testing.T) {
 
-	t.Run("ProjectPath()", func(t *testing.T) {
+	t.Run("ProjectPath", func(t *testing.T) {
 		expected := "fabric-devkit/maejor/svc"
 		actual := ProjectPath()
 		if !strings.Contains(actual, expected) {
@@ -67,7 +67,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("NetworkPath()", func(t *testing.T) {
+	t.Run("NetworkPath", func(t *testing.T) {
 		expected := "fabric-devkit/maejor/svc"
 		actual := NetworkPath()
 		if !strings.Contains(actual, expected) {
@@ -75,7 +75,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("CryptoPath()", func(t *testing.T) {
+	t.Run("CryptoPath", func(t *testing.T) {
 		expected := "fabric-devkit/maejor/svc/network/crypto-config"
 		actual := CryptoPath()
 		if !strings.Contains(actual, expected) {
@@ -83,7 +83,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("ChannelPath()", func(t *testing.T) {
+	t.Run("ChannelPath", func(t *testing.T) {
 		expected := "fabric-devkit/maejor/svc/network/channel-artefacts"
 		actual := ChannelArtefactPath()
 		if !strings.Contains(actual, expected) {
@@ -91,7 +91,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("ScriptPath()", func(t *testing.T) {
+	t.Run("ScriptPath", func(t *testing.T) {
 		expected := "fabric-devkit/maejor/svc/network/scripts"
 		actual := ScriptPath()
 		if !strings.Contains(actual, expected) {
@@ -99,7 +99,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("ChaincodePath()", func(t *testing.T) {
+	t.Run("ChaincodePath", func(t *testing.T) {
 		expected := "src/github.com/aladdinid/chaincodes"
 		actual := ChaincodePath()
 		if !strings.Contains(actual, expected) {
@@ -107,7 +107,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("HyperledgerImages()", func(t *testing.T) {
+	t.Run("HyperledgerImages", func(t *testing.T) {
 		expected := 6
 		result := HyperledgerImages()
 		actual := len(result)
@@ -116,7 +116,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("Domain()", func(t *testing.T) {
+	t.Run("Domain", func(t *testing.T) {
 		expected := "fabric.network"
 		actual := Domain()
 		if strings.Compare(expected, actual) != 0 {
@@ -124,7 +124,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("consortiumByName():NotFound", func(t *testing.T) {
+	t.Run("consortiumByName:NotFound", func(t *testing.T) {
 		actual := consortiumByName("1")
 		expected := ConsortiumSpec{}
 
@@ -133,7 +133,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("channelByName()", func(t *testing.T) {
+	t.Run("channelByName", func(t *testing.T) {
 		actual := channelByName("ChannelOne")
 		expected := ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}}
 
@@ -142,7 +142,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("consortiumByName()", func(t *testing.T) {
+	t.Run("consortiumByName", func(t *testing.T) {
 		actual := consortiumByName("SampleConsortium")
 		channelSpecs := []ChannelSpec{
 			ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
@@ -155,7 +155,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("ConsortiumSpecs()", func(t *testing.T) {
+	t.Run("ConsortiumSpecs", func(t *testing.T) {
 		channelSpecs := []ChannelSpec{
 			ChannelSpec{Name: "ChannelOne", Organizations: []string{"Org1", "Org2"}},
 			ChannelSpec{Name: "ChannelTwo", Organizations: []string{"Org2"}},
@@ -171,7 +171,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("orgByName():NotFound", func(t *testing.T) {
+	t.Run("orgByName:NotFound", func(t *testing.T) {
 		actual := orgByName("O1")
 		expected := OrgSpec{}
 
@@ -180,7 +180,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run(`orgByName("Org1"):1`, func(t *testing.T) {
+	t.Run(`orgByName-"Org1"-1`, func(t *testing.T) {
 		org := orgByName("Org1")
 		value := reflect.ValueOf(&org).Elem()
 
@@ -192,7 +192,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run(`orgByName("Org1"):2`, func(t *testing.T) {
+	t.Run(`orgByName-"Org1"-2`, func(t *testing.T) {
 		actual := orgByName("Org1")
 		expected := OrgSpec{
 			Name:   "Org1",
@@ -230,7 +230,7 @@ func TestConfig(t *testing.T) {
 // Data type services tests
 func TestDataTypes(t *testing.T) {
 
-	t.Run("NewNetworkSpec()", func(t *testing.T) {
+	t.Run("NewNetworkSpec", func(t *testing.T) {
 		spec := NewNetworkSpec()
 		value := reflect.ValueOf(*spec)
 
@@ -242,12 +242,13 @@ func TestDataTypes(t *testing.T) {
 		}
 	})
 
-	t.Run("CliSpecs", func(t *testing.T) {
+	t.Run("cliScriptSpec", func(t *testing.T) {
 		spec := NewNetworkSpec()
-		actual := spec.CliSpecs
-		expected := []CliSpec{
-			CliSpec{Name: "cli.peer0.org1.fabric.network", ChannelNames: []string{"ChannelOne", "ChannelTwo"}, OrdererDomainName: "orderer.fabric.network"},
-			CliSpec{Name: "cli.peer0.org2.fabric.network", ChannelNames: []string{"ChannelOne", "ChannelTwo"}, OrdererDomainName: "orderer.fabric.network"},
+		actual := cliScriptSpec(spec)
+		expected := CliScriptSpec{
+			OrdererName:  "orderer.fabric.network",
+			CliNames:     []string{"cli.peer0.org1.fabric.network", "cli.peer0.org2.fabric.network"},
+			ChannelNames: []string{"ChannelOne", "ChannelTwo"},
 		}
 
 		if !reflect.DeepEqual(expected, actual) {

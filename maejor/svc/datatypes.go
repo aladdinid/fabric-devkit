@@ -37,34 +37,32 @@ type ConsortiumSpec struct {
 	ChannelSpecs []ChannelSpec
 }
 
-// CliSpec represents information for generating cli execution script
-type CliSpec struct {
-	Name              string
-	ChannelNames      []string
-	OrdererDomainName string
+// CliScriptSpec representation of scripting attributes
+type CliScriptSpec struct {
+	OrdererName  string
+	CliNames     []string
+	ChannelNames []string
 }
 
-func cliSpecs(network *NetworkSpec) []CliSpec {
+func cliScriptSpec(networkSpec *NetworkSpec) CliScriptSpec {
+	var script = CliScriptSpec{}
 
-	var cliSpecs = []CliSpec{}
+	script.OrdererName = fmt.Sprintf("orderer.%s", networkSpec.Domain)
 
-	ordererDomainName := fmt.Sprintf("orderer.%s", network.Domain)
-
-	for _, orgSpec := range network.OrganizationSpecs {
-		cliSpec := CliSpec{}
-		cliSpec.Name = fmt.Sprintf("cli.%s.%s.%s", orgSpec.Anchor, strings.ToLower(orgSpec.Name), network.Domain)
-		cliSpec.ChannelNames = []string{}
-		for _, consortiumSpec := range network.ConsortiumSpecs {
-			for _, chanSpec := range consortiumSpec.ChannelSpecs {
-				cliSpec.ChannelNames = append(cliSpec.ChannelNames, chanSpec.Name)
-			}
-		}
-		cliSpec.OrdererDomainName = ordererDomainName
-		cliSpecs = append(cliSpecs, cliSpec)
+	for _, org := range networkSpec.OrganizationSpecs {
+		anchor := org.Anchor
+		orgName := org.Name
+		cliName := fmt.Sprintf("cli.%s.%s.%s", anchor, strings.ToLower(orgName), networkSpec.Domain)
+		script.CliNames = append(script.CliNames, cliName)
 	}
 
-	return cliSpecs
+	for _, consortiumSpec := range networkSpec.ConsortiumSpecs {
+		for _, channelSpec := range consortiumSpec.ChannelSpecs {
+			script.ChannelNames = append(script.ChannelNames, channelSpec.Name)
+		}
+	}
 
+	return script
 }
 
 // NetworkSpec represents specification of a Fabric network
@@ -77,7 +75,7 @@ type NetworkSpec struct {
 	Domain              string `json:"domain"`
 	ConsortiumSpecs     []ConsortiumSpec
 	OrganizationSpecs   []OrgSpec
-	CliSpecs            []CliSpec
+	CliScript           CliScriptSpec
 }
 
 // NewNetworkSpec instantiate a reference to a new spec
@@ -93,7 +91,7 @@ func NewNetworkSpec() *NetworkSpec {
 	spec.ConsortiumSpecs = ConsortiumSpecs()
 	spec.OrganizationSpecs = OrganizationSpecs()
 
-	spec.CliSpecs = cliSpecs(spec)
+	spec.CliScript = cliScriptSpec(spec)
 
 	return spec
 }
