@@ -33,7 +33,7 @@ NetworkPath: {{.ProjectPath}}/network
 CryptoPath: {{.ProjectPath}}/network/crypto-config
 ChannelArtefactPath: {{.ProjectPath}}/network/channel-artefacts
 ScriptPath: {{.ProjectPath}}/network/scripts
-ChaincodePath: $GOPATH/src/github.com/aladdinid/chaincodes
+ChaincodePath: $GOPATH/src/github.com/aladdinid/fabric-devkit/chaincodes
 
 containers:
   hyperledger:
