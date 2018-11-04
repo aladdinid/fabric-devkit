@@ -41,18 +41,19 @@ services:
       - ORDERER_GENERAL_BATCHSIZE=10
       - ORDERER_GENERAL_BATCHTIMEOUT=10s
       - ORDERER_GENERAL_LOGLEVEL=debug
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/fabric/crypto-config/channel-artefacts/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
-      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/fabric/crypto-config/msp
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
-      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/fabric/crypto-config/tls/server.crt
-      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/fabric/crypto-config/tls/server.key
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/fabric/crypto-config/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-      - ./channel-artefacts/:/var/hyperledger/fabric/crypto-config/channel-artefacts/
-      - ./crypto-config/ordererOrganizations/fabric.network/orderers/orderer.{{$domain}}:/var/hyperledger/fabric/crypto-config/
+      - ./channel-artefacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/{{$domain}}/orderers/orderer.{{$domain}}/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/{{$domain}}/orderers/orderer.{{$domain}}/tls:/var/hyperledger/orderer/tls
     ports:
       - 7050:7050
 
@@ -130,7 +131,7 @@ services:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=debug
-      - CORE_PEER_ID=cli.{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
+      - CORE_PEER_ID={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
       - CORE_PEER_ADDRESS={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}:7051
       - CORE_PEER_LOCALMSPID={{$org.Name}}MSP
       - CORE_PEER_TLS_ENABLED=true
