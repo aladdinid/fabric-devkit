@@ -94,6 +94,10 @@ func createNetworkSpec() error {
 		return err
 	}
 
+	if err := svc.GenerateCliScripts(*networkSpec); err != nil {
+		return err
+	}
+
 	return nil
 }
 

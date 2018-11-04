@@ -468,8 +468,8 @@ func generateQueryScript(spec NetworkSpec) error {
 	return nil
 }
 
-// GenerateScripts produces scripts
-func GenerateScripts(spec NetworkSpec) error {
+// GenerateCliScripts produces scripts
+func GenerateCliScripts(spec NetworkSpec) error {
 	if err := generateCreateChannelScript(spec); err != nil {
 		return err
 	}
