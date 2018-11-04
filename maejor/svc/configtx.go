@@ -249,10 +249,10 @@ configtxgen -profile OrdererGenesis -outputBlock ./channel-artefacts/genesis.blo
 {{- range $index1, $consortium := .ConsortiumSpecs}}
   {{range $index2, $channelSpec := $consortium.ChannelSpecs}}
 # {{$channelSpec.Name}} configuration
-configtxgen -profile {{$channelSpec.Name}} -outputCreateChannelTx ./channel-artefacts/{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}}
+configtxgen -profile {{$channelSpec.Name}} -outputCreateChannelTx ./channel-artefacts/{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name | ToLower}}
       {{range $index3, $org := $channelSpec.Organizations}}
 # Anchor peer for {{$channelSpec.Name}} for transaction of {{$org}}
-configtxgen -profile {{$channelSpec.Name}} -outputAnchorPeersUpdate ./channel-artefacts/{{$org}}MSPanchors_{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name}} -asOrg {{$org}}MSP
+configtxgen -profile {{$channelSpec.Name}} -outputAnchorPeersUpdate ./channel-artefacts/{{$org}}MSPanchors_{{$channelSpec.Name | ToLower }}.tx -channelID {{$channelSpec.Name | ToLower}} -asOrg {{$org}}MSP
       {{end}}
   {{- end}}
 {{end}}

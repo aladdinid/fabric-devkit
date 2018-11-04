@@ -26,8 +26,8 @@ version: '2'
 
 services:
 
-  orderer.{{.Domain}}:
-    container_name: orderer.{{.Domain}}
+  orderer.{{$domain}}:
+    container_name: orderer.{{$domain}}
     image: hyperledger/fabric-orderer
     tty: true
     environment:
@@ -47,15 +47,12 @@ services:
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/fabric/crypto-config/tls/server.crt
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/fabric/crypto-config/tls/server.key
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/fabric/crypto-config/tls/ca.crt, /var/hyperledger/fabric/crypto-config/peerOrganizations/org1.fabric.network/tls/ca.crt, /var/hyperledger/fabric/crypto-config/peerOrganizations/org2.fabric.network/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/fabric/crypto-config/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
       - ./channel-artefacts/:/var/hyperledger/fabric/crypto-config/channel-artefacts/
-      - ./crypto-config/ordererOrganizations/fabric.network/orderers/orderer.fabric.network/:/var/hyperledger/fabric/crypto-config/
-      {{- range $index, $org := .OrganizationSpecs }}
-      - ./crypto-config/peerOrganizations/{{$org.Name | ToLower}}.{{$domain}}/peers/{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}/tls/ca.crt:/var/hyperledger/fabric/crypto-config/peerOrganizations/{{$org.Name | ToLower}}.{{$domain}}/tls/ca.crt
-      {{- end}}
+      - ./crypto-config/ordererOrganizations/fabric.network/orderers/orderer.{{$domain}}:/var/hyperledger/fabric/crypto-config/
     ports:
       - 7050:7050
 
@@ -91,7 +88,7 @@ services:
     environment:
       - CORE_PEER_ID={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
       - CORE_PEER_ADDRESS={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID={{$org.Name}}MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/msp
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
@@ -123,7 +120,7 @@ services:
       - {{PortInc 7053 $index}}:7053
     depends_on: 
       - orderer.{{$domain}}
-      - peer0.db.{{$org.Name | ToLower}}.{{$domain}}
+      - {{$org.Anchor}}.db.{{$org.Name | ToLower}}.{{$domain}}
   
   cli.{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}:
     container_name: cli.{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
@@ -133,9 +130,9 @@ services:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=debug
-      - CORE_PEER_ID={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
+      - CORE_PEER_ID=cli.{{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}
       - CORE_PEER_ADDRESS={{$org.Anchor}}.{{$org.Name | ToLower}}.{{$domain}}:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_LOCALMSPID={{$org.Name}}MSP
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/tls/server.key
