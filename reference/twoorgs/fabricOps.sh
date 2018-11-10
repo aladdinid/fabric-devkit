@@ -156,8 +156,16 @@ case $COMMAND in
         cleanAssets
         ;;
     "cleanall")
-        cleanall
-        cleanAssets
+        read -p "*****WARNING***** The following command will DELETE ALL OF YOUR DOCKER IMAGES! It is advisable to use 'clean' instead. Do you wish to continue? (y/n)?" choice
+        case "$choice" in 
+          y|Y )
+            cleanall
+            cleanAssets
+            ;;
+          n|N ) exit 0;;
+          * ) echo "invalid option";;
+        esac
+        
         ;;
     "clean-explorer")
         cleanExplorer
